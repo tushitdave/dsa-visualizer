@@ -1,0 +1,315 @@
+{
+  "algorithm_id": "stack_based_optimization",
+  "name": "Stack-Based Optimization",
+  "display_name": "Stack-Based Approach",
+  "category": "Monotonic Stack",
+  "tags": ["stack", "array", "optimization", "histogram", "next-greater"],
+
+  "overview": {
+    "core_idea": "Use a stack to efficiently track elements that need to be processed later, maintaining a specific order (monotonic increasing or decreasing) to solve problems in O(n) time.",
+    "when_to_use": [
+      "Finding next greater/smaller element for each position",
+      "Problems involving rectangles in histograms",
+      "Matching parentheses or brackets",
+      "Problems where you need to look back at previous elements efficiently",
+      "When brute force would require O(n²) nested loops"
+    ],
+    "real_world_analogy": "Like stacking plates - you can only access the top plate. When a new plate comes that's smaller, you stack it on top. When a larger plate comes, you must remove smaller plates first. This 'reveals' which plates were blocked by smaller ones."
+  },
+
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Initialize empty stack",
+        "description": "Start with an empty stack. We'll store indices (not values) to track positions.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [],
+        "currentIndex": null,
+        "maxArea": 0,
+        "highlight": "init"
+      },
+      {
+        "title": "Process index 0 (height=2)",
+        "description": "Stack is empty, push index 0. Bar height 2 starts a potential rectangle.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [0],
+        "currentIndex": 0,
+        "maxArea": 0,
+        "highlight": "push"
+      },
+      {
+        "title": "Process index 1 (height=1)",
+        "description": "Height 1 < height 2. Pop index 0, calculate area = 2 × 1 = 2. Push index 1.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1],
+        "currentIndex": 1,
+        "maxArea": 2,
+        "popped": 0,
+        "calculatedArea": "2 × 1 = 2",
+        "highlight": "pop-calculate"
+      },
+      {
+        "title": "Process index 2 (height=5)",
+        "description": "Height 5 > height 1. Push index 2. Increasing sequence continues.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1, 2],
+        "currentIndex": 2,
+        "maxArea": 2,
+        "highlight": "push"
+      },
+      {
+        "title": "Process index 3 (height=6)",
+        "description": "Height 6 > height 5. Push index 3. Still increasing.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1, 2, 3],
+        "currentIndex": 3,
+        "maxArea": 2,
+        "highlight": "push"
+      },
+      {
+        "title": "Process index 4 (height=2) - Pop 6",
+        "description": "Height 2 < height 6. Pop index 3, area = 6 × 1 = 6. Max is now 6.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1, 2],
+        "currentIndex": 4,
+        "maxArea": 6,
+        "popped": 3,
+        "calculatedArea": "6 × 1 = 6",
+        "highlight": "pop-calculate"
+      },
+      {
+        "title": "Continue popping - Pop 5",
+        "description": "Height 2 < height 5. Pop index 2, area = 5 × 2 = 10. NEW MAX!",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1],
+        "currentIndex": 4,
+        "maxArea": 10,
+        "popped": 2,
+        "calculatedArea": "5 × 2 = 10",
+        "highlight": "new-max"
+      },
+      {
+        "title": "Push index 4",
+        "description": "Height 2 >= height 1. Push index 4.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1, 4],
+        "currentIndex": 4,
+        "maxArea": 10,
+        "highlight": "push"
+      },
+      {
+        "title": "Process index 5 (height=3)",
+        "description": "Height 3 > height 2. Push index 5.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [1, 4, 5],
+        "currentIndex": 5,
+        "maxArea": 10,
+        "highlight": "push"
+      },
+      {
+        "title": "End of array - Pop remaining",
+        "description": "Pop all remaining indices and calculate areas. Final max area = 10.",
+        "array": [2, 1, 5, 6, 2, 3],
+        "stack": [],
+        "currentIndex": 6,
+        "maxArea": 10,
+        "highlight": "complete"
+      }
+    ]
+  },
+
+  "pseudocode": {
+    "language": "generic",
+    "code": "function largestRectangleInHistogram(heights):\n    stack = []  // stores indices\n    maxArea = 0\n    \n    for i = 0 to heights.length:\n        // Use 0 as sentinel for end of array\n        currentHeight = (i == heights.length) ? 0 : heights[i]\n        \n        while stack is not empty AND heights[stack.top()] > currentHeight:\n            height = heights[stack.pop()]\n            width = stack.isEmpty() ? i : (i - stack.top() - 1)\n            area = height * width\n            maxArea = max(maxArea, area)\n        \n        stack.push(i)\n    \n    return maxArea",
+    "annotations": [
+      { "line": 1, "text": "Function takes an array of bar heights" },
+      { "line": 2, "text": "Stack stores INDICES, not heights - crucial for width calculation" },
+      { "line": 3, "text": "Track the maximum area found so far" },
+      { "line": 5, "text": "Iterate through array + one extra step (sentinel)" },
+      { "line": 7, "text": "Sentinel value 0 forces all remaining bars to be processed" },
+      { "line": 9, "text": "Pop while current bar is shorter than stack top" },
+      { "line": 10, "text": "Get the height of the popped bar" },
+      { "line": 11, "text": "Width extends from current position back to previous stack element" },
+      { "line": 12, "text": "Calculate area: height × width" },
+      { "line": 13, "text": "Update maximum if this area is larger" },
+      { "line": 15, "text": "Push current index to stack" },
+      { "line": 17, "text": "Return the largest rectangle area found" }
+    ],
+    "variables": [
+      { "name": "stack", "description": "Monotonic stack storing indices of bars" },
+      { "name": "maxArea", "description": "Maximum rectangle area found" },
+      { "name": "height", "description": "Height of popped bar" },
+      { "name": "width", "description": "Width of rectangle from popped bar" }
+    ],
+    "key_operations": [
+      "Push index when current bar is taller than stack top",
+      "Pop and calculate area when current bar is shorter",
+      "Use sentinel value (0) to process remaining stack"
+    ],
+    "return_values": [
+      { "value": "maxArea", "condition": "The largest rectangle area in histogram" }
+    ],
+    "flow_steps": [
+      "Initialize Stack",
+      "Process Each Bar",
+      "Pop & Calculate",
+      "Update Maximum",
+      "Return Result"
+    ]
+  },
+
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Each element is pushed once and popped once from the stack. Even though there's a while loop inside the for loop, each element is processed at most twice (one push, one pop), giving O(2n) = O(n).",
+      "comparison_data": [
+        { "n": 10, "stack": 20, "bruteforce": 100 },
+        { "n": 100, "stack": 200, "bruteforce": 10000 },
+        { "n": 1000, "stack": 2000, "bruteforce": 1000000 },
+        { "n": 10000, "stack": 20000, "bruteforce": 100000000 },
+        { "n": 100000, "stack": 200000, "bruteforce": 10000000000 }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "In the worst case (strictly increasing heights), the stack holds all n indices."
+    }
+  },
+
+  "variations": [
+    {
+      "name": "Next Greater Element",
+      "description": "For each element, find the next element that is greater than it.",
+      "use_case": "Stock price analysis, temperature problems.",
+      "example": {
+        "input": "[2, 1, 2, 4, 3]",
+        "output": "[4, 2, 4, -1, -1]"
+      },
+      "key_change": "Store elements instead of indices, pop when finding greater element"
+    },
+    {
+      "name": "Trapping Rain Water",
+      "description": "Calculate how much water can be trapped between bars.",
+      "use_case": "Container problems, elevation maps.",
+      "example": {
+        "input": "[0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]",
+        "output": "6 units of water"
+      },
+      "key_change": "Track both left and right boundaries for water calculation"
+    },
+    {
+      "name": "Daily Temperatures",
+      "description": "Find how many days until a warmer temperature.",
+      "use_case": "Weather analysis, waiting time problems.",
+      "example": {
+        "input": "[73, 74, 75, 71, 69, 72, 76, 73]",
+        "output": "[1, 1, 4, 2, 1, 1, 0, 0]"
+      },
+      "key_change": "Store indices, calculate distance when popping"
+    },
+    {
+      "name": "Maximal Rectangle in Matrix",
+      "description": "Find the largest rectangle containing only 1s in a binary matrix.",
+      "use_case": "Image processing, land allocation problems.",
+      "example": {
+        "input": "2D matrix of 0s and 1s",
+        "output": "Area of largest rectangle of 1s"
+      },
+      "key_change": "Build histogram for each row, apply stack algorithm"
+    }
+  ],
+
+  "common_pitfalls": [
+    {
+      "title": "Storing Values Instead of Indices",
+      "problem": "Stack should store indices, not values, to correctly calculate width.",
+      "bad_code": "stack.push(heights[i])  // Wrong!",
+      "good_code": "stack.push(i)  // Correct - store index",
+      "explanation": "We need indices to calculate the width of rectangles. The height can be looked up from the array using the index."
+    },
+    {
+      "title": "Forgetting the Sentinel",
+      "problem": "Not processing remaining elements in stack after the loop.",
+      "bad_code": "for i = 0 to heights.length - 1  // Missing final cleanup",
+      "good_code": "for i = 0 to heights.length  // Extra iteration with height 0",
+      "explanation": "Using a sentinel (height 0 at the end) forces all remaining bars to be popped and processed."
+    },
+    {
+      "title": "Wrong Width Calculation",
+      "problem": "Calculating width incorrectly when stack has multiple elements.",
+      "bad_code": "width = i - stack.top()  // Wrong!",
+      "good_code": "width = stack.isEmpty() ? i : (i - stack.top() - 1)",
+      "explanation": "Width is from the element AFTER the new stack top to the current position, not from the stack top itself."
+    },
+    {
+      "title": "Not Handling Empty Stack",
+      "problem": "Accessing stack.top() when stack might be empty.",
+      "bad_code": "width = i - stack.top() - 1  // Crashes if empty",
+      "good_code": "width = stack.isEmpty() ? i : (i - stack.top() - 1)",
+      "explanation": "When stack is empty, the rectangle extends from the beginning (width = i)."
+    }
+  ],
+
+  "practice_exercise": {
+    "title": "Find Largest Rectangle in Histogram",
+    "description": "Walk through the stack-based algorithm step by step.",
+    "array": [2, 1, 5, 6, 2, 3],
+    "target": "Find max area",
+    "steps": [
+      {
+        "question": "After processing index 0 (height=2), what's in the stack?",
+        "hint": "Stack is empty, so we push the index",
+        "options": ["[2]", "[0]", "[]", "[0, 2]"],
+        "correct": 1,
+        "explanation": "We push INDEX 0 (not the value 2) onto the stack. Stack = [0]."
+      },
+      {
+        "question": "At index 1 (height=1), height 1 < height 2. What do we do first?",
+        "hint": "When current height is less than stack top height...",
+        "options": ["Push index 1", "Pop index 0 and calculate area", "Skip this index", "Clear the stack"],
+        "correct": 1,
+        "explanation": "We pop index 0, calculate area = height[0] × width = 2 × 1 = 2, then push index 1."
+      },
+      {
+        "question": "At index 4 (height=2), we pop index 3 (height=6). What's the area?",
+        "hint": "Area = height × width. Width = 1 (just this bar)",
+        "options": ["6", "12", "2", "8"],
+        "correct": 0,
+        "explanation": "Area = 6 × 1 = 6. The bar at index 3 with height 6 forms a rectangle of width 1."
+      },
+      {
+        "question": "When we pop index 2 (height=5), what is the width of that rectangle?",
+        "hint": "Width extends from index 2 to before index 4, but after index 1",
+        "options": ["1", "2", "3", "4"],
+        "correct": 1,
+        "explanation": "Width = i - stack.top() - 1 = 4 - 1 - 1 = 2. Rectangle spans indices 2 and 3."
+      },
+      {
+        "question": "What is the maximum area found?",
+        "hint": "Height 5 × width 2 gave us the largest rectangle",
+        "options": ["6", "8", "10", "12"],
+        "correct": 2,
+        "explanation": "Maximum area = 10, from the rectangle with height 5 and width 2 (covering indices 2 and 3)."
+      }
+    ]
+  },
+
+  "pro_tips": [
+    "Always store INDICES in the stack, not values - you need indices to calculate width.",
+    "Use a sentinel value (0 or -1) at the end to automatically process remaining stack elements.",
+    "The key insight: when you pop, you've found both the left boundary (new stack top) and right boundary (current index).",
+    "Monotonic stack maintains elements in sorted order - increasing for 'next greater', decreasing for 'next smaller'.",
+    "This pattern reduces O(n²) brute force to O(n) by avoiding redundant comparisons."
+  ],
+
+  "related_problems": [
+    "Largest Rectangle in Histogram (LeetCode 84)",
+    "Maximal Rectangle (LeetCode 85)",
+    "Trapping Rain Water (LeetCode 42)",
+    "Daily Temperatures (LeetCode 739)",
+    "Next Greater Element I, II, III (LeetCode 496, 503, 556)",
+    "Sum of Subarray Minimums (LeetCode 907)"
+  ]
+}

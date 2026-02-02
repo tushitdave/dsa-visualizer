@@ -1,0 +1,214 @@
+{
+  "algorithm_id": "sliding_window",
+  "name": "Sliding Window",
+  "display_name": "Sliding Window Technique",
+  "category": "Array/String Traversal",
+  "tags": ["array", "string", "window", "substring", "subarray"],
+
+  "overview": {
+    "core_idea": "Maintain a 'window' of elements and slide it across the array/string, updating the window state incrementally instead of recalculating from scratch.",
+    "when_to_use": [
+      "Finding subarrays/substrings with specific properties",
+      "Maximum/minimum sum of k consecutive elements",
+      "Longest/shortest substring with certain characters",
+      "Problems involving contiguous sequences",
+      "When brute force checks all subarrays in O(n²)"
+    ],
+    "real_world_analogy": "Like looking through a magnifying glass that you slide across a page. Instead of reading the whole page for each position, you just note what letter enters and exits the magnifying window as you move it."
+  },
+
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Fixed window: Find max sum of 3 elements",
+        "description": "Array: [2, 1, 5, 1, 3, 2]. Window size k=3.",
+        "array": [2, 1, 5, 1, 3, 2],
+        "windowStart": 0,
+        "windowEnd": 2,
+        "windowSum": 8,
+        "maxSum": 8,
+        "highlight": "init"
+      },
+      {
+        "title": "Slide window right",
+        "description": "Remove 2 (left), add 1 (right). New sum = 8 - 2 + 1 = 7.",
+        "array": [2, 1, 5, 1, 3, 2],
+        "windowStart": 1,
+        "windowEnd": 3,
+        "windowSum": 7,
+        "maxSum": 8,
+        "highlight": "slide"
+      },
+      {
+        "title": "Continue sliding",
+        "description": "Remove 1, add 3. New sum = 7 - 1 + 3 = 9. New max!",
+        "array": [2, 1, 5, 1, 3, 2],
+        "windowStart": 2,
+        "windowEnd": 4,
+        "windowSum": 9,
+        "maxSum": 9,
+        "highlight": "new-max"
+      }
+    ]
+  },
+
+  "pseudocode": {
+    "language": "generic",
+    "code": "// Fixed-size window: Max sum of k elements\nfunction maxSumSubarray(array, k):\n    windowSum = sum of first k elements\n    maxSum = windowSum\n    \n    for i = k to array.length - 1:\n        // Slide window: remove left element, add right element\n        windowSum = windowSum - array[i - k] + array[i]\n        maxSum = max(maxSum, windowSum)\n    \n    return maxSum\n\n// Variable-size window: Longest substring with k distinct\nfunction longestWithKDistinct(s, k):\n    windowStart = 0\n    charCount = {}\n    maxLength = 0\n    \n    for windowEnd = 0 to s.length - 1:\n        // Expand window\n        charCount[s[windowEnd]]++\n        \n        // Shrink window if too many distinct chars\n        while charCount.size > k:\n            charCount[s[windowStart]]--\n            if charCount[s[windowStart]] == 0:\n                delete charCount[s[windowStart]]\n            windowStart++\n        \n        maxLength = max(maxLength, windowEnd - windowStart + 1)\n    \n    return maxLength",
+    "annotations": [
+      { "line": 2, "text": "Fixed-size window for maximum sum" },
+      { "line": 3, "text": "Initialize window with first k elements" },
+      { "line": 6, "text": "Start from kth element and slide" },
+      { "line": 8, "text": "Key insight: O(1) update instead of O(k) recalculation" },
+      { "line": 14, "text": "Variable-size window for substring problems" },
+      { "line": 16, "text": "HashMap to track character frequencies" },
+      { "line": 19, "text": "Expand: add right character to window" },
+      { "line": 22, "text": "Shrink: remove left characters until valid" },
+      { "line": 28, "text": "Update max length after each valid window" }
+    ],
+    "variables": [
+      { "name": "windowSum", "description": "Sum of elements in current window" },
+      { "name": "windowStart", "description": "Left boundary of sliding window" },
+      { "name": "windowEnd", "description": "Right boundary of sliding window" },
+      { "name": "charCount", "description": "Frequency map of characters in window" }
+    ],
+    "key_operations": [
+      "Expand window by adding right element",
+      "Shrink window by removing left element",
+      "Update window state incrementally (O(1) per slide)"
+    ],
+    "return_values": [
+      { "value": "maxSum", "condition": "Maximum sum of k consecutive elements" },
+      { "value": "maxLength", "condition": "Longest valid window length" }
+    ],
+    "flow_steps": [
+      "Initialize Window",
+      "Expand Right",
+      "Check Condition",
+      "Shrink Left",
+      "Update Result"
+    ]
+  },
+
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Each element is visited at most twice (once when expanding, once when shrinking). This gives O(2n) = O(n).",
+      "comparison_data": [
+        { "n": 10, "sliding": 20, "bruteforce": 100 },
+        { "n": 100, "sliding": 200, "bruteforce": 10000 },
+        { "n": 1000, "sliding": 2000, "bruteforce": 1000000 },
+        { "n": 10000, "sliding": 20000, "bruteforce": 100000000 }
+      ]
+    },
+    "space": {
+      "complexity": "O(1) or O(k)",
+      "explanation": "Fixed window uses O(1). Variable window may use O(k) for tracking elements in window (e.g., HashMap for k distinct characters)."
+    }
+  },
+
+  "variations": [
+    {
+      "name": "Fixed-Size Window",
+      "description": "Window size stays constant as it slides.",
+      "use_case": "Max sum of k consecutive elements, moving averages.",
+      "example": {
+        "input": "[2, 1, 5, 1, 3, 2], k=3",
+        "output": "9 (subarray [5, 1, 3])"
+      },
+      "key_change": "Window size is predetermined"
+    },
+    {
+      "name": "Variable-Size Window",
+      "description": "Window expands and shrinks based on conditions.",
+      "use_case": "Longest substring with constraints.",
+      "example": {
+        "input": "\"aabacbebebe\", k=3",
+        "output": "7 (\"cbebebe\")"
+      },
+      "key_change": "Shrink when constraint violated, expand otherwise"
+    },
+    {
+      "name": "Minimum Window",
+      "description": "Find smallest window satisfying a condition.",
+      "use_case": "Minimum window substring, smallest subarray with sum >= k.",
+      "example": {
+        "input": "\"ADOBECODEBANC\", target=\"ABC\"",
+        "output": "\"BANC\""
+      },
+      "key_change": "Track minimum size when valid, then shrink"
+    }
+  ],
+
+  "common_pitfalls": [
+    {
+      "title": "Not Updating Window State Correctly",
+      "problem": "Forgetting to remove the leaving element when sliding.",
+      "bad_code": "windowSum = windowSum + array[i]  // Missing subtraction!",
+      "good_code": "windowSum = windowSum - array[i - k] + array[i]",
+      "explanation": "Must both remove the element leaving the window AND add the new element."
+    },
+    {
+      "title": "Off-by-One in Window Size",
+      "problem": "Calculating window size incorrectly.",
+      "bad_code": "size = windowEnd - windowStart  // Wrong!",
+      "good_code": "size = windowEnd - windowStart + 1",
+      "explanation": "Window includes both endpoints, so add 1."
+    },
+    {
+      "title": "Shrinking Too Much",
+      "problem": "Variable window shrinks past valid state.",
+      "bad_code": "while invalid: shrink  // May over-shrink",
+      "good_code": "while invalid AND windowStart <= windowEnd: shrink",
+      "explanation": "Add bounds check to prevent empty or invalid window."
+    }
+  ],
+
+  "practice_exercise": {
+    "title": "Maximum Sum of K Elements",
+    "description": "Find the maximum sum of any k consecutive elements.",
+    "array": [2, 1, 5, 1, 3, 2],
+    "target": "k = 3",
+    "steps": [
+      {
+        "question": "What is the sum of the first window [2, 1, 5]?",
+        "hint": "Add the first 3 elements",
+        "options": ["6", "7", "8", "9"],
+        "correct": 2,
+        "explanation": "Initial window sum = 2 + 1 + 5 = 8"
+      },
+      {
+        "question": "Slide to window [1, 5, 1]. How do we calculate the new sum?",
+        "hint": "Use the previous sum, remove leaving element, add entering element",
+        "options": ["1 + 5 + 1 = 7", "8 - 2 + 1 = 7", "Recalculate all", "8 + 1 = 9"],
+        "correct": 1,
+        "explanation": "New sum = old sum - leaving + entering = 8 - 2 + 1 = 7"
+      },
+      {
+        "question": "What is the maximum sum found?",
+        "hint": "Check all window positions",
+        "options": ["7", "8", "9", "10"],
+        "correct": 2,
+        "explanation": "Window [5, 1, 3] has sum = 9, which is the maximum."
+      }
+    ]
+  },
+
+  "pro_tips": [
+    "For fixed-size windows, focus on what enters and exits the window.",
+    "For variable windows, think: when to expand? when to shrink?",
+    "Use a HashMap when tracking distinct elements or frequencies.",
+    "The window should represent a valid state after each iteration.",
+    "Draw the window on paper - visualization helps immensely!"
+  ],
+
+  "related_problems": [
+    "Maximum Sum Subarray of Size K",
+    "Longest Substring Without Repeating Characters (LeetCode 3)",
+    "Minimum Window Substring (LeetCode 76)",
+    "Longest Substring with At Most K Distinct Characters (LeetCode 340)",
+    "Sliding Window Maximum (LeetCode 239)"
+  ]
+}

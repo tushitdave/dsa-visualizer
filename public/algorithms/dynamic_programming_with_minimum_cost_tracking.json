@@ -1,0 +1,288 @@
+{
+  "algorithm_id": "dynamic_programming_with_minimum_cost_tracking",
+  "name": "Dynamic Programming with Minimum Cost Tracking",
+  "display_name": "Dynamic Programming with Minimum Cost Tracking",
+  "category": "Dynamic Programming",
+  "tags": [
+    "Dynamic Programming",
+    "Optimization",
+    "Cost Minimization",
+    "Pathfinding"
+  ],
+  "overview": {
+    "core_idea": "This algorithm solves optimization problems by breaking them into overlapping subproblems and solving each subproblem only once, storing the results for reuse. It also tracks the minimum cost path or decision sequence to achieve the optimal solution.",
+    "when_to_use": [
+      "When you need to minimize a cost or maximize a value while following specific constraints",
+      "When the problem can be broken into overlapping subproblems",
+      "When you need to track the sequence of decisions leading to the optimal solution",
+      "When brute force solutions are too slow due to exponential complexity"
+    ],
+    "real_world_analogy": "Imagine planning a road trip across several cities where you want to minimize the total cost of travel (gas, tolls, etc.). At each city, you decide the next city to visit based on the cheapest route forward, while keeping track of the entire path to ensure you reach your destination with the lowest cost."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize cost and path arrays",
+        "description": "Start by creating an array to store the minimum cost to reach each state and another array to track the path or decisions leading to that state.",
+        "array": [
+          0,
+          "\u221e",
+          "\u221e",
+          "\u221e"
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Process each state",
+        "description": "Iteratively calculate the minimum cost for each state by considering all possible transitions from previous states. Update the cost and path arrays accordingly.",
+        "array": [
+          0,
+          2,
+          5,
+          "\u221e"
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Finalize the solution",
+        "description": "Once all states are processed, the minimum cost to reach the final state is stored in the cost array. Use the path array to reconstruct the sequence of decisions.",
+        "array": [
+          0,
+          2,
+          5,
+          6
+        ],
+        "highlight": "finalize"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function minCostTracking(input):\n    // Line 1: Initialize cost and path arrays\n    cost = [0] + [Infinity] * (n - 1)\n    path = [-1] * n\n\n    // Line 2: Main logic to compute minimum cost\n    for i from 1 to n:\n        for each j in valid_transitions(i):\n            if cost[j] + transition_cost(j, i) < cost[i]:\n                cost[i] = cost[j] + transition_cost(j, i)\n                path[i] = j\n\n    // Line 3: Reconstruct the path\n    result_path = []\n    current = n - 1\n    while current != -1:\n        result_path.append(current)\n        current = path[current]\n\n    return cost[n-1], result_path.reverse()",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Initialize the cost array with 0 for the starting state and infinity for all others."
+      },
+      {
+        "line": 2,
+        "text": "The path array keeps track of the previous state for each state."
+      },
+      {
+        "line": 5,
+        "text": "Iterate through all states to compute the minimum cost."
+      },
+      {
+        "line": 6,
+        "text": "For each valid transition, check if the cost can be minimized."
+      },
+      {
+        "line": 7,
+        "text": "Update the cost and path arrays if a better transition is found."
+      },
+      {
+        "line": 10,
+        "text": "Reconstruct the path by backtracking through the path array."
+      },
+      {
+        "line": 14,
+        "text": "Return the minimum cost and the reconstructed path."
+      }
+    ],
+    "variables": [
+      {
+        "name": "cost",
+        "description": "Stores the minimum cost to reach each state."
+      },
+      {
+        "name": "path",
+        "description": "Tracks the previous state for each state to reconstruct the solution path."
+      },
+      {
+        "name": "result_path",
+        "description": "Stores the reconstructed sequence of decisions leading to the optimal solution."
+      }
+    ],
+    "key_operations": [
+      "Initialization of cost and path arrays",
+      "Iterative computation of minimum cost for each state",
+      "Updating the path array to track decision sequences",
+      "Reconstructing the optimal path from the path array"
+    ],
+    "return_values": [
+      {
+        "value": "cost[n-1]",
+        "condition": "The minimum cost to reach the final state."
+      },
+      {
+        "value": "result_path",
+        "condition": "The sequence of decisions leading to the minimum cost solution."
+      }
+    ],
+    "flow_steps": [
+      "Initialize cost and path arrays",
+      "Iterate through states to compute minimum costs",
+      "Update cost and path arrays based on transitions",
+      "Reconstruct the optimal path",
+      "Return the minimum cost and path"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n * m)",
+      "average": "O(n * m)",
+      "worst": "O(n * m)",
+      "explanation": "The algorithm processes each state and considers all valid transitions for that state. If there are n states and m transitions per state, the total time complexity is O(n * m).",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 100,
+          "bruteforce": 1000
+        },
+        {
+          "n": 100,
+          "optimized": 10000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000000,
+          "bruteforce": 1000000000
+        },
+        {
+          "n": 10000,
+          "optimized": 100000000,
+          "bruteforce": 1000000000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "The algorithm uses two arrays of size n (cost and path), resulting in O(n) space complexity."
+    }
+  },
+  "variations": [
+    {
+      "name": "1D Minimum Cost Path",
+      "description": "Tracks the minimum cost in a linear sequence of states.",
+      "use_case": "When the problem involves a single sequence of states, such as minimizing cost in a straight line.",
+      "example": {
+        "input": "[1, 2, 3, 4]",
+        "output": "Minimum cost: 10, Path: [0, 1, 2, 3]"
+      },
+      "key_change": "Simplify transitions to only consider adjacent states."
+    },
+    {
+      "name": "2D Grid Minimum Cost Path",
+      "description": "Tracks the minimum cost in a 2D grid.",
+      "use_case": "When the problem involves navigating a grid, such as finding the shortest path in a maze.",
+      "example": {
+        "input": "2D grid with costs",
+        "output": "Minimum cost and path in the grid"
+      },
+      "key_change": "Modify transitions to consider neighboring cells in the grid."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to initialize costs correctly",
+      "problem": "If the cost array is not initialized properly, the algorithm may produce incorrect results.",
+      "bad_code": "cost = [Infinity] * n",
+      "good_code": "cost = [0] + [Infinity] * (n - 1)",
+      "explanation": "The starting state must have a cost of 0, as it requires no transitions to reach."
+    },
+    {
+      "title": "Pitfall 2: Not handling invalid transitions",
+      "problem": "If invalid transitions are not excluded, the algorithm may attempt to access out-of-bounds indices.",
+      "bad_code": "for j in range(n):",
+      "good_code": "for j in valid_transitions(i):",
+      "explanation": "Always ensure transitions are valid to avoid runtime errors."
+    },
+    {
+      "title": "Pitfall 3: Incorrect path reconstruction",
+      "problem": "If the path array is not updated correctly, the reconstructed path may be invalid.",
+      "bad_code": "path[i] = i",
+      "good_code": "path[i] = j",
+      "explanation": "The path array should store the previous state, not the current state."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Minimum Cost Path",
+    "description": "Walk through the algorithm step by step to find the minimum cost and path.",
+    "array": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ],
+    "target": "Minimize cost to reach the last state",
+    "steps": [
+      {
+        "question": "What is the initial cost array?",
+        "hint": "Think about how we initialize costs for the starting state.",
+        "options": [
+          "[0, \u221e, \u221e, \u221e]",
+          "[\u221e, \u221e, \u221e, \u221e]",
+          "[0, 0, 0, 0]",
+          "[\u221e, 0, \u221e, \u221e]"
+        ],
+        "correct": 0,
+        "explanation": "The starting state has a cost of 0, and all other states are initialized to infinity."
+      },
+      {
+        "question": "What happens when processing state 1?",
+        "hint": "Consider all valid transitions to state 1.",
+        "options": [
+          "Cost remains \u221e",
+          "Cost is updated to 3",
+          "Path is updated to include state 0",
+          "Both B and C"
+        ],
+        "correct": 3,
+        "explanation": "The cost is updated to 3, and the path is updated to include state 0."
+      },
+      {
+        "question": "What is the final cost to reach the last state?",
+        "hint": "Follow the transitions and compute the minimum cost.",
+        "options": [
+          "10",
+          "15",
+          "20",
+          "25"
+        ],
+        "correct": 1,
+        "explanation": "The minimum cost is 15, computed by summing the optimal transitions."
+      },
+      {
+        "question": "What is the reconstructed path?",
+        "hint": "Backtrack through the path array.",
+        "options": [
+          "[0, 1, 2, 3]",
+          "[0, 2, 4, 7]",
+          "[0, 3, 6, 7]",
+          "[0, 1, 3, 7]"
+        ],
+        "correct": 2,
+        "explanation": "The path is reconstructed by backtracking through the path array."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Always initialize the cost array with infinity except for the starting state.",
+    "Use a separate array to track the path or decisions for easy reconstruction.",
+    "Visualize the problem as a graph with nodes and edges to understand transitions.",
+    "Optimize by limiting the number of transitions considered for each state.",
+    "Test the algorithm with edge cases, such as no valid transitions or multiple optimal paths."
+  ],
+  "related_problems": [
+    "64. Minimum Path Sum (LeetCode)",
+    "120. Triangle (LeetCode)",
+    "931. Minimum Falling Path Sum (LeetCode)",
+    "322. Coin Change (LeetCode)",
+    "518. Coin Change 2 (LeetCode)"
+  ]
+}

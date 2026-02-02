@@ -1,0 +1,285 @@
+{
+  "algorithm_id": "dfs_with_memoization",
+  "name": "DFS with Memoization",
+  "display_name": "DFS with Memoization",
+  "category": "Dynamic Programming",
+  "tags": [
+    "Graph Traversal",
+    "Dynamic Programming",
+    "Memoization",
+    "Optimization"
+  ],
+  "overview": {
+    "core_idea": "DFS with Memoization combines depth-first search (DFS) with caching (memoization) to avoid redundant computations. It is particularly useful for problems where overlapping subproblems exist, as memoization stores results of previously computed states to improve efficiency.",
+    "when_to_use": [
+      "When solving problems with overlapping subproblems",
+      "When a graph traversal involves repeated visits to the same node or state",
+      "When optimizing recursive solutions to avoid redundant computations",
+      "When working with problems that have exponential brute-force complexity"
+    ],
+    "real_world_analogy": "Imagine you are trying to find the shortest path through a maze, but you keep a notebook to record paths you've already explored. If you encounter the same part of the maze again, you simply check your notebook instead of exploring it again, saving time and effort."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize memoization structure",
+        "description": "Create a data structure (e.g., a dictionary) to store results of previously computed states. This ensures that repeated computations are avoided.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5,
+          9
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Perform DFS with memoization checks",
+        "description": "Traverse the graph or problem space using DFS. Before computing the result for a state, check if it is already stored in the memoization structure. If it is, use the cached result; otherwise, compute and store the result.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5,
+          9
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Return the final result",
+        "description": "Once the DFS completes, return the result from the memoization structure or the computed value.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5,
+          9
+        ],
+        "highlight": "result"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function dfsWithMemoization(state, memo):\n    // Line 1: Check memoization\n    if state in memo:\n        return memo[state]\n\n    // Line 2: Base case\n    if base_condition(state):\n        return base_value\n\n    // Line 3: Recursive DFS\n    result = compute_result(state)\n    for next_state in generate_next_states(state):\n        result += dfsWithMemoization(next_state, memo)\n\n    // Line 4: Store result in memo\n    memo[state] = result\n    return result",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Check if the current state has already been computed and stored in the memoization structure."
+      },
+      {
+        "line": 4,
+        "text": "Handle the base case where recursion should terminate."
+      },
+      {
+        "line": 7,
+        "text": "Perform recursive DFS on all possible next states."
+      },
+      {
+        "line": 10,
+        "text": "Store the computed result for the current state in the memoization structure."
+      },
+      {
+        "line": 11,
+        "text": "Return the computed result."
+      }
+    ],
+    "variables": [
+      {
+        "name": "state",
+        "description": "Represents the current state or node being processed."
+      },
+      {
+        "name": "memo",
+        "description": "A data structure (e.g., dictionary) used to store computed results for states."
+      },
+      {
+        "name": "result",
+        "description": "Stores the computed result for the current state."
+      }
+    ],
+    "key_operations": [
+      "Checking if a state is already memoized",
+      "Computing the result for a state",
+      "Recursively traversing next states",
+      "Storing results in the memoization structure"
+    ],
+    "return_values": [
+      {
+        "value": "result",
+        "condition": "When the computation is successful and complete"
+      },
+      {
+        "value": "base_value",
+        "condition": "When the base case is reached"
+      }
+    ],
+    "flow_steps": [
+      "Check memoization",
+      "Handle base case",
+      "Perform recursive DFS",
+      "Store result in memo",
+      "Return final result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(V + E)",
+      "average": "O(V + E)",
+      "worst": "O(V + E)",
+      "explanation": "The algorithm visits each state or node once and processes its neighbors, avoiding redundant computations due to memoization. V represents the number of states/nodes, and E represents the number of edges/transitions.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(V)",
+      "explanation": "The memoization structure requires space proportional to the number of states/nodes visited, as each state is stored once."
+    }
+  },
+  "variations": [
+    {
+      "name": "DFS without Memoization",
+      "description": "A simpler version of DFS that does not use memoization, resulting in redundant computations.",
+      "use_case": "Use when the problem does not involve overlapping subproblems.",
+      "example": {
+        "input": "[3, 1, 4, 1, 5, 9]",
+        "output": "Result computed without caching"
+      },
+      "key_change": "Remove the memoization structure and checks."
+    },
+    {
+      "name": "Top-Down Dynamic Programming",
+      "description": "A variation where DFS is used to solve problems with overlapping subproblems in a structured dynamic programming approach.",
+      "use_case": "Use for problems like Fibonacci sequence or coin change.",
+      "example": {
+        "input": "n = 10",
+        "output": "55 (10th Fibonacci number)"
+      },
+      "key_change": "Focus on structured recursion with memoization."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to memoize results",
+      "problem": "If results are not stored, the algorithm performs redundant computations.",
+      "bad_code": "// The incorrect way\nfunction dfs(state):\n    if base_condition(state):\n        return base_value\n    result = compute_result(state)\n    for next_state in generate_next_states(state):\n        result += dfs(next_state)\n    return result",
+      "good_code": "// The correct way\nfunction dfsWithMemoization(state, memo):\n    if state in memo:\n        return memo[state]\n    if base_condition(state):\n        return base_value\n    result = compute_result(state)\n    for next_state in generate_next_states(state):\n        result += dfsWithMemoization(next_state, memo)\n    memo[state] = result\n    return result",
+      "explanation": "Memoization avoids redundant computations by storing results for previously computed states."
+    },
+    {
+      "title": "Pitfall 2: Using incorrect keys for memoization",
+      "problem": "Using an incorrect or incomplete representation of the state as the memoization key can lead to incorrect results.",
+      "bad_code": "memo[state.id] = result",
+      "good_code": "memo[state] = result",
+      "explanation": "Ensure the memoization key uniquely identifies the state."
+    },
+    {
+      "title": "Pitfall 3: Memory overflow due to excessive memoization",
+      "problem": "If the memoization structure grows too large, it can cause memory issues.",
+      "bad_code": "memo[state] = result // Store all states",
+      "good_code": "if relevant(state): memo[state] = result",
+      "explanation": "Only store results for relevant states to optimize memory usage."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Fibonacci Sequence with DFS and Memoization",
+    "description": "Use DFS with Memoization to compute the nth Fibonacci number.",
+    "array": [
+      1,
+      1,
+      2,
+      3,
+      5,
+      8,
+      13
+    ],
+    "target": "Compute the 7th Fibonacci number",
+    "steps": [
+      {
+        "question": "What is the base case for the Fibonacci sequence?",
+        "hint": "Think about the first two numbers in the sequence.",
+        "options": [
+          "n = 0 and n = 1",
+          "n = 1 and n = 2",
+          "n = 2 and n = 3",
+          "n = 3 and n = 4"
+        ],
+        "correct": 0,
+        "explanation": "The Fibonacci sequence starts with 0 and 1 as base cases."
+      },
+      {
+        "question": "What should you check before computing a Fibonacci number?",
+        "hint": "Think about memoization.",
+        "options": [
+          "If n is odd",
+          "If n is even",
+          "If n is already memoized",
+          "If n is greater than 10"
+        ],
+        "correct": 2,
+        "explanation": "Check if the result for n is already stored in the memoization structure."
+      },
+      {
+        "question": "What is the recursive formula for Fibonacci numbers?",
+        "hint": "How are Fibonacci numbers computed?",
+        "options": [
+          "fib(n) = fib(n-1) + fib(n-2)",
+          "fib(n) = fib(n-1) * fib(n-2)",
+          "fib(n) = fib(n-1) - fib(n-2)",
+          "fib(n) = fib(n-1) / fib(n-2)"
+        ],
+        "correct": 0,
+        "explanation": "The Fibonacci sequence is computed as the sum of the two previous numbers."
+      },
+      {
+        "question": "What is the 7th Fibonacci number?",
+        "hint": "Use the recursive formula and memoization.",
+        "options": [
+          "8",
+          "13",
+          "21",
+          "34"
+        ],
+        "correct": 1,
+        "explanation": "The 7th Fibonacci number is 13, computed using memoization and recursion."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Always initialize the memoization structure before starting DFS.",
+    "Use a unique representation of states as memoization keys.",
+    "Combine DFS with memoization for problems with overlapping subproblems.",
+    "Test edge cases to ensure memoization handles all scenarios correctly.",
+    "Optimize memory usage by storing only relevant states."
+  ],
+  "related_problems": [
+    "Fibonacci Sequence (LeetCode 509)",
+    "Word Break (LeetCode 139)",
+    "Longest Increasing Path in a Matrix (LeetCode 329)",
+    "Coin Change (LeetCode 322)",
+    "Unique Paths (LeetCode 62)"
+  ]
+}

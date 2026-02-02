@@ -1,0 +1,222 @@
+{
+  "algorithm_id": "hash_map",
+  "name": "Hash Map",
+  "display_name": "Hash Map / Hash Table",
+  "category": "Data Structure",
+  "tags": ["hash", "lookup", "frequency", "mapping", "o1"],
+
+  "overview": {
+    "core_idea": "Use a hash function to map keys to indices, enabling O(1) average-time lookups, insertions, and deletions.",
+    "when_to_use": [
+      "Need O(1) lookup by key",
+      "Counting frequency of elements",
+      "Finding duplicates or complements",
+      "Storing key-value relationships",
+      "When you need to check 'have I seen this before?'"
+    ],
+    "real_world_analogy": "Like a library catalog system - instead of searching every book, you look up the book's code (hash) which tells you exactly which shelf (bucket) to find it on."
+  },
+
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Two Sum Problem Setup",
+        "description": "Find two numbers in [2, 7, 11, 15] that add to target 9.",
+        "array": [2, 7, 11, 15],
+        "target": 9,
+        "hashMap": {},
+        "currentIndex": null,
+        "highlight": "init"
+      },
+      {
+        "title": "Process element 2",
+        "description": "Need 9 - 2 = 7. Is 7 in map? No. Store 2 -> index 0.",
+        "array": [2, 7, 11, 15],
+        "target": 9,
+        "hashMap": { "2": 0 },
+        "currentIndex": 0,
+        "looking_for": 7,
+        "highlight": "store"
+      },
+      {
+        "title": "Process element 7",
+        "description": "Need 9 - 7 = 2. Is 2 in map? YES! Found at index 0.",
+        "array": [2, 7, 11, 15],
+        "target": 9,
+        "hashMap": { "2": 0 },
+        "currentIndex": 1,
+        "looking_for": 2,
+        "found": true,
+        "highlight": "found"
+      }
+    ]
+  },
+
+  "pseudocode": {
+    "language": "generic",
+    "code": "// Two Sum using Hash Map\nfunction twoSum(array, target):\n    map = {}  // value -> index\n    \n    for i = 0 to array.length - 1:\n        complement = target - array[i]\n        \n        if complement in map:\n            return [map[complement], i]\n        \n        map[array[i]] = i\n    \n    return []  // No pair found\n\n// Count Frequencies\nfunction countFrequencies(array):\n    freq = {}\n    \n    for element in array:\n        if element in freq:\n            freq[element]++\n        else:\n            freq[element] = 1\n    \n    return freq",
+    "annotations": [
+      { "line": 2, "text": "Create an empty hash map" },
+      { "line": 3, "text": "Map will store value -> index pairs" },
+      { "line": 5, "text": "Iterate through each element" },
+      { "line": 6, "text": "Calculate what value we need to find" },
+      { "line": 8, "text": "O(1) lookup: is complement in map?" },
+      { "line": 9, "text": "Found! Return both indices" },
+      { "line": 11, "text": "Store current value and its index for future lookups" },
+      { "line": 16, "text": "Frequency counting pattern" },
+      { "line": 19, "text": "Check if element already exists" },
+      { "line": 20, "text": "Increment existing count" },
+      { "line": 22, "text": "Initialize new element count to 1" }
+    ],
+    "variables": [
+      { "name": "map", "description": "Hash map storing value -> index pairs" },
+      { "name": "complement", "description": "Value needed to reach target sum" },
+      { "name": "freq", "description": "Frequency counter for elements" }
+    ],
+    "key_operations": [
+      "Calculate complement = target - current value",
+      "O(1) lookup for complement in map",
+      "Store current value with its index for future lookups"
+    ],
+    "return_values": [
+      { "value": "[map[complement], i]", "condition": "When complement is found in map" },
+      { "value": "[]", "condition": "When no pair sums to target" }
+    ],
+    "flow_steps": [
+      "Initialize Map",
+      "Calculate Complement",
+      "Lookup in Map",
+      "Store Current",
+      "Return Result"
+    ]
+  },
+
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Single pass through array with O(1) hash map operations. Total: O(n) * O(1) = O(n).",
+      "comparison_data": [
+        { "n": 10, "hashmap": 10, "bruteforce": 100 },
+        { "n": 100, "hashmap": 100, "bruteforce": 10000 },
+        { "n": 1000, "hashmap": 1000, "bruteforce": 1000000 },
+        { "n": 10000, "hashmap": 10000, "bruteforce": 100000000 }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "Hash map may store up to n elements in the worst case."
+    }
+  },
+
+  "variations": [
+    {
+      "name": "Two Sum",
+      "description": "Find indices of two numbers that add to target.",
+      "use_case": "Classic complement lookup problem.",
+      "example": {
+        "input": "[2, 7, 11, 15], target = 9",
+        "output": "[0, 1]"
+      },
+      "key_change": "Store value -> index, look up complement"
+    },
+    {
+      "name": "Group Anagrams",
+      "description": "Group strings that are anagrams of each other.",
+      "use_case": "Grouping by sorted key or character count.",
+      "example": {
+        "input": "[\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"]",
+        "output": "[[\"eat\",\"tea\",\"ate\"], [\"tan\",\"nat\"], [\"bat\"]]"
+      },
+      "key_change": "Use sorted string or char frequency as key"
+    },
+    {
+      "name": "LRU Cache",
+      "description": "Implement least recently used cache.",
+      "use_case": "Caching with O(1) get/put operations.",
+      "example": {
+        "input": "get(1), put(1,1), get(1)",
+        "output": "-1, null, 1"
+      },
+      "key_change": "Combine hash map with doubly linked list"
+    }
+  ],
+
+  "common_pitfalls": [
+    {
+      "title": "Checking Before Storing",
+      "problem": "For Two Sum, checking after storing can match element with itself.",
+      "bad_code": "map[arr[i]] = i; if complement in map...",
+      "good_code": "if complement in map: return; map[arr[i]] = i",
+      "explanation": "Check first, then store, to avoid using same element twice."
+    },
+    {
+      "title": "Handling Hash Collisions",
+      "problem": "Different keys might hash to same bucket.",
+      "bad_code": "Assuming every key gets unique bucket",
+      "good_code": "Use language's built-in HashMap which handles collisions",
+      "explanation": "Built-in implementations handle collisions via chaining or probing."
+    },
+    {
+      "title": "Using Unhashable Keys",
+      "problem": "Lists/arrays cannot be directly used as hash keys.",
+      "bad_code": "map[[1,2,3]] = value  // Error in most languages",
+      "good_code": "map[tuple(1,2,3)] = value  // Convert to tuple",
+      "explanation": "Convert to immutable type (tuple, string) for use as key."
+    }
+  ],
+
+  "practice_exercise": {
+    "title": "Two Sum with Hash Map",
+    "description": "Find two indices where elements sum to target.",
+    "array": [2, 7, 11, 15],
+    "target": 9,
+    "steps": [
+      {
+        "question": "At index 0 (value 2), what complement are we looking for?",
+        "hint": "complement = target - current value",
+        "options": ["2", "7", "9", "11"],
+        "correct": 1,
+        "explanation": "complement = 9 - 2 = 7. We're looking for 7."
+      },
+      {
+        "question": "Is 7 in our hash map yet?",
+        "hint": "We just started, map is empty",
+        "options": ["Yes", "No"],
+        "correct": 1,
+        "explanation": "Map is empty at start. We haven't stored anything yet."
+      },
+      {
+        "question": "After storing 2, we move to index 1 (value 7). What complement do we look for?",
+        "hint": "complement = 9 - 7",
+        "options": ["2", "7", "9", "16"],
+        "correct": 0,
+        "explanation": "complement = 9 - 7 = 2. We're looking for 2."
+      },
+      {
+        "question": "Is 2 in our map? What do we return?",
+        "hint": "We stored 2 -> 0 in the previous step",
+        "options": ["No, continue", "Yes, return [0, 1]", "Yes, return [1, 0]", "Error"],
+        "correct": 1,
+        "explanation": "Yes! 2 is in map at index 0. Current index is 1. Return [0, 1]."
+      }
+    ]
+  },
+
+  "pro_tips": [
+    "Always consider: 'What should be the key? What should be the value?'",
+    "For complement problems, store what you've seen, look up what you need.",
+    "Frequency maps are incredibly useful - get(key, 0) handles missing keys.",
+    "Hash maps trade space for time - O(n) space for O(1) lookups.",
+    "When order matters, use LinkedHashMap or OrderedDict."
+  ],
+
+  "related_problems": [
+    "Two Sum (LeetCode 1)",
+    "Group Anagrams (LeetCode 49)",
+    "Valid Anagram (LeetCode 242)",
+    "First Unique Character (LeetCode 387)",
+    "Subarray Sum Equals K (LeetCode 560)"
+  ]
+}

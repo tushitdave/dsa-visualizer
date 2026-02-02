@@ -1,0 +1,309 @@
+{
+  "algorithm_id": "direct_index_calculation",
+  "name": "Direct Index Calculation",
+  "display_name": "Direct Index Calculation",
+  "category": "Hashing",
+  "tags": [
+    "hashing",
+    "constant-time",
+    "array-based",
+    "lookup"
+  ],
+  "overview": {
+    "core_idea": "Direct Index Calculation is a technique where an element's value or a property of the element is directly used as an index to access or store data in an array. This works because the array provides constant-time access, making operations like lookups or updates extremely fast.",
+    "when_to_use": [
+      "When the range of possible values is small and known in advance",
+      "When you need constant-time lookups or updates",
+      "When memory usage is not a constraint",
+      "When you can map elements directly to indices without collisions"
+    ],
+    "real_world_analogy": "Imagine a row of lockers in a school, each labeled with a unique number (like 0, 1, 2, etc.). If you know the locker number, you can directly go to it and retrieve or store your belongings without searching through all the lockers. Similarly, Direct Index Calculation uses the value (or a property of the value) as the 'locker number' to directly access the corresponding data."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize an array",
+        "description": "Create an array large enough to hold all possible values. For example, if the values range from 0 to 9, create an array of size 10.",
+        "array": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Insert elements",
+        "description": "Use the value of each element as the index and store the element at that index. For example, if the value is 5, store it at index 5.",
+        "array": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          5,
+          null,
+          null,
+          null,
+          null
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Lookup elements",
+        "description": "To check if an element exists, directly access the index corresponding to the value. For example, to check if 5 exists, look at index 5.",
+        "array": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          5,
+          null,
+          null,
+          null,
+          null
+        ],
+        "highlight": "lookup"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function directIndexCalculation(values, max_value):\n    // Line 1: Initialize an array of size max_value + 1\n    array = [null] * (max_value + 1)\n    \n    // Line 2: Insert elements into the array\n    for value in values:\n        array[value] = value\n    \n    // Line 3: Return the array for lookup\n    return array",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Create an array large enough to hold all possible values."
+      },
+      {
+        "line": 2,
+        "text": "Initialize the array with null values."
+      },
+      {
+        "line": 5,
+        "text": "Iterate through the input values."
+      },
+      {
+        "line": 6,
+        "text": "Store each value at its corresponding index in the array."
+      },
+      {
+        "line": 8,
+        "text": "Return the array for future lookups."
+      }
+    ],
+    "variables": [
+      { "name": "array", "description": "Lookup array of size max_value + 1" },
+      { "name": "max_value", "description": "Maximum possible value in input" },
+      { "name": "value", "description": "Current element being processed" }
+    ],
+    "key_operations": [
+      "Create array of size max_value + 1",
+      "Use value as index: array[value] = value",
+      "O(1) lookup by directly accessing array[value]"
+    ],
+    "return_values": [
+      { "value": "array", "condition": "Lookup table for O(1) access" },
+      { "value": "array[value]", "condition": "Value exists if not null" }
+    ],
+    "flow_steps": [
+      "Determine Range",
+      "Initialize Array",
+      "Insert Elements",
+      "Lookup by Index",
+      "Return Result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(1)",
+      "average": "O(1)",
+      "worst": "O(1)",
+      "explanation": "The time complexity for lookups, insertions, and deletions is constant (O(1)) because accessing an array index is a direct operation. There are no loops or searches involved during these operations.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(max_value)",
+      "explanation": "The space complexity is proportional to the range of possible values (max_value). An array of size max_value + 1 is required, which can be memory-intensive if the range is large."
+    }
+  },
+  "variations": [
+    {
+      "name": "Direct Index with Boolean Flags",
+      "description": "Instead of storing the actual values, store a boolean flag indicating whether a value exists.",
+      "use_case": "Use this variation when you only need to check for existence and not store the actual values.",
+      "example": {
+        "input": [
+          3,
+          5,
+          7
+        ],
+        "output": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "key_change": "Replace the value at the index with 'true' instead of the actual value."
+      }
+    },
+    {
+      "name": "Direct Index with Frequency Count",
+      "description": "Store the frequency of each value instead of the value itself.",
+      "use_case": "Use this variation when you need to count occurrences of values.",
+      "example": {
+        "input": [
+          3,
+          5,
+          3,
+          7
+        ],
+        "output": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          1,
+          0,
+          1
+        ],
+        "key_change": "Increment the value at the index instead of replacing it."
+      }
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Large Range of Values",
+      "problem": "If the range of possible values is too large, the array will consume excessive memory.",
+      "bad_code": "// Using a large array for a wide range of values\narray = [null] * 1000000",
+      "good_code": "// Use a hash table instead for sparse data\nhash_table = {}",
+      "explanation": "Direct Index Calculation is not suitable for large ranges with sparse data. A hash table is a better option in such cases."
+    },
+    {
+      "title": "Pitfall 2: Negative Values",
+      "problem": "The algorithm does not handle negative values directly since array indices must be non-negative.",
+      "bad_code": "// Attempting to use negative indices\narray[-5] = 5",
+      "good_code": "// Shift the range to make all values non-negative\nshift = abs(min_value)\narray[value + shift] = value",
+      "explanation": "You need to shift the range of values to ensure all indices are non-negative."
+    },
+    {
+      "title": "Pitfall 3: Non-Integer Values",
+      "problem": "The algorithm cannot handle non-integer values directly as array indices must be integers.",
+      "bad_code": "// Using non-integer indices\narray[3.5] = 5",
+      "good_code": "// Map non-integer values to integers\nindex = int(value * 10)\narray[index] = value",
+      "explanation": "Non-integer values must be mapped to integers before using them as indices."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Direct Index Calculation",
+    "description": "Walk through the algorithm step by step to store and lookup values.",
+    "array": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ],
+    "target": "Store the values in an array and check if 5 exists.",
+    "steps": [
+      {
+        "question": "What is the size of the array needed if the maximum value is 9?",
+        "hint": "The size of the array should be max_value + 1.",
+        "options": [
+          "9",
+          "10",
+          "8",
+          "11"
+        ],
+        "correct": 1,
+        "explanation": "The array size must accommodate indices from 0 to 9, so it needs to be of size 10."
+      },
+      {
+        "question": "Where will the value 5 be stored in the array?",
+        "hint": "The value itself is used as the index.",
+        "options": [
+          "Index 4",
+          "Index 5",
+          "Index 6",
+          "Index 9"
+        ],
+        "correct": 1,
+        "explanation": "The value 5 is stored at index 5."
+      },
+      {
+        "question": "How do you check if 5 exists in the array?",
+        "hint": "Look at the index corresponding to the value.",
+        "options": [
+          "Check index 4",
+          "Check index 5",
+          "Check index 6",
+          "Check index 9"
+        ],
+        "correct": 1,
+        "explanation": "If the value at index 5 is not null, then 5 exists in the array."
+      },
+      {
+        "question": "What is the time complexity of the lookup operation?",
+        "hint": "Think about how arrays are accessed.",
+        "options": [
+          "O(1)",
+          "O(n)",
+          "O(log n)",
+          "O(n^2)"
+        ],
+        "correct": 0,
+        "explanation": "Array access is a constant-time operation, so the time complexity is O(1)."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Use this algorithm when the range of values is small and fixed.",
+    "Be cautious of memory usage if the range of values is large.",
+    "Shift negative values to make them non-negative before using them as indices.",
+    "Consider using variations like boolean flags or frequency counts for specific use cases.",
+    "Always validate the input range before applying this algorithm."
+  ],
+  "related_problems": [
+    "Counting Sort (LeetCode 912)",
+    "Find Missing Number (LeetCode 268)",
+    "Check if N and its Double Exist (LeetCode 1346)",
+    "Find All Numbers Disappeared in an Array (LeetCode 448)",
+    "Maximum Frequency Stack (LeetCode 895)"
+  ]
+}

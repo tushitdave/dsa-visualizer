@@ -1,0 +1,302 @@
+{
+  "algorithm_id": "dynamic_programming_with_histogram",
+  "name": "Dynamic Programming with Histogram Technique",
+  "display_name": "Dynamic Programming with Histogram Technique",
+  "category": "Dynamic Programming",
+  "tags": [
+    "dynamic programming",
+    "monotonic stack",
+    "histogram",
+    "optimization"
+  ],
+  "overview": {
+    "core_idea": "This algorithm efficiently computes the largest rectangular area in a histogram using dynamic programming principles combined with a monotonic stack. It works by systematically analyzing the height of each bar and leveraging previous computations to avoid redundant calculations.",
+    "when_to_use": [
+      "When solving problems related to finding maximum rectangular areas in histograms",
+      "When optimizing brute force solutions for rectangular area problems",
+      "When histogram-like data structures are involved in the problem",
+      "When time complexity needs to be reduced from O(n^2) to O(n)"
+    ],
+    "real_world_analogy": "Imagine stacking books of varying heights side by side on a shelf. You want to find the largest rectangular area that can be formed by grouping consecutive books together. This algorithm helps you efficiently determine the largest grouping without manually checking every possible combination."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize",
+        "description": "Start by initializing an empty stack and setting the maximum area to 0. The stack will help track indices of histogram bars in a monotonic increasing order.",
+        "array": [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Process each bar",
+        "description": "Iterate through each bar in the histogram. If the current bar is shorter than the bar at the top of the stack, calculate the area for the bar at the top of the stack and update the maximum area. Otherwise, push the current index onto the stack.",
+        "array": [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Final computation",
+        "description": "After processing all bars, compute the area for any remaining bars in the stack. This ensures that all potential rectangles are considered.",
+        "array": [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ],
+        "highlight": "final"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function largestRectangleArea(histogram):\n    // Line 1: Initialize stack and max area\n    stack = []\n    max_area = 0\n    \n    // Line 2: Iterate through histogram\n    for i = 0 to len(histogram):\n        while stack is not empty and histogram[stack[-1]] > histogram[i]:\n            height = histogram[stack.pop()]\n            width = i if stack is empty else i - stack[-1] - 1\n            max_area = max(max_area, height * width)\n        stack.push(i)\n    \n    // Line 3: Process remaining bars in stack\n    while stack is not empty:\n        height = histogram[stack.pop()]\n        width = len(histogram) if stack is empty else len(histogram) - stack[-1] - 1\n        max_area = max(max_area, height * width)\n    \n    return max_area",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Initialize an empty stack and a variable to track the maximum area"
+      },
+      {
+        "line": 2,
+        "text": "Iterate through each bar in the histogram"
+      },
+      {
+        "line": 3,
+        "text": "Check if the current bar is shorter than the bar at the top of the stack"
+      },
+      {
+        "line": 4,
+        "text": "Calculate the area for the bar at the top of the stack"
+      },
+      {
+        "line": 5,
+        "text": "Push the current index onto the stack"
+      },
+      {
+        "line": 8,
+        "text": "Process any remaining bars in the stack after iteration"
+      },
+      {
+        "line": 9,
+        "text": "Calculate the area for each remaining bar in the stack"
+      },
+      {
+        "line": 11,
+        "text": "Return the maximum area found"
+      }
+    ],
+    "variables": [
+      {
+        "name": "stack",
+        "description": "Stores indices of histogram bars in a monotonic increasing order"
+      },
+      {
+        "name": "max_area",
+        "description": "Tracks the largest rectangular area found so far"
+      },
+      {
+        "name": "height",
+        "description": "Height of the bar being processed"
+      },
+      {
+        "name": "width",
+        "description": "Width of the rectangle formed by the current bar"
+      }
+    ],
+    "key_operations": [
+      "Push indices onto the stack to maintain monotonic order",
+      "Pop indices from the stack to calculate areas",
+      "Update the maximum area based on computed rectangles"
+    ],
+    "return_values": [
+      {
+        "value": "max_area",
+        "condition": "When the computation is successful"
+      },
+      {
+        "value": "0",
+        "condition": "When the histogram is empty"
+      }
+    ],
+    "flow_steps": [
+      "Initialize stack and max_area",
+      "Iterate through histogram bars",
+      "Pop from stack and calculate area",
+      "Push current index onto stack",
+      "Process remaining bars in stack",
+      "Return maximum area"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Each bar is pushed and popped from the stack exactly once, resulting in linear time complexity. The algorithm avoids redundant calculations by leveraging the monotonic stack.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "The stack may store up to n indices in the worst case, where n is the number of bars in the histogram."
+    }
+  },
+  "variations": [
+    {
+      "name": "Largest Rectangle in Binary Matrix",
+      "description": "This variation finds the largest rectangle of 1s in a binary matrix by treating each row as a histogram.",
+      "use_case": "Use this variation for problems involving binary matrices.",
+      "example": {
+        "input": "Binary matrix [[1, 0, 1], [1, 1, 1], [1, 1, 0]]",
+        "output": "Largest rectangle area = 4"
+      },
+      "key_change": "Convert each row of the matrix into a histogram and apply the algorithm row by row."
+    },
+    {
+      "name": "Circular Histogram",
+      "description": "Handles histograms where the bars are arranged in a circular manner.",
+      "use_case": "Use this variation for circular histogram problems.",
+      "example": {
+        "input": "Histogram [2, 1, 5, 6, 2, 3] (circular)",
+        "output": "Largest rectangle area = 10"
+      },
+      "key_change": "Extend the histogram by duplicating it to simulate circular behavior."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to process remaining bars",
+      "problem": "Not processing remaining bars in the stack leads to incorrect results.",
+      "bad_code": "// The incorrect way\nwhile stack.isNotEmpty():\n    stack.pop()",
+      "good_code": "// The correct way\nwhile stack.isNotEmpty():\n    height = histogram[stack.pop()]\n    width = len(histogram) if stack.isEmpty() else len(histogram) - stack[-1] - 1\n    max_area = max(max_area, height * width)",
+      "explanation": "The bad code neglects to calculate areas for remaining bars, while the correct code ensures all bars are processed."
+    },
+    {
+      "title": "Pitfall 2: Incorrect width calculation",
+      "problem": "Using the wrong formula for width results in inaccurate area computation.",
+      "bad_code": "width = i - stack[-1]",
+      "good_code": "width = i - stack[-1] - 1",
+      "explanation": "Subtracting 1 accounts for the gap between the current index and the top of the stack."
+    },
+    {
+      "title": "Pitfall 3: Handling empty histograms",
+      "problem": "Failing to handle edge cases like empty histograms can cause runtime errors.",
+      "bad_code": "return histogram[0]",
+      "good_code": "return 0 if len(histogram) == 0 else max_area",
+      "explanation": "The fix ensures the algorithm handles empty histograms gracefully."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Largest Rectangle in Histogram",
+    "description": "Walk through the algorithm step by step on this example histogram.",
+    "array": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ],
+    "target": "Find the largest rectangular area",
+    "steps": [
+      {
+        "question": "What happens when the stack is empty?",
+        "hint": "Think about what the stack represents.",
+        "options": [
+          "Push the current index",
+          "Pop the stack",
+          "Calculate area",
+          "Ignore the bar"
+        ],
+        "correct": 0,
+        "explanation": "When the stack is empty, the current index is pushed onto the stack."
+      },
+      {
+        "question": "What happens when the current bar is shorter than the top of the stack?",
+        "hint": "Consider how the algorithm calculates areas.",
+        "options": [
+          "Push the current index",
+          "Pop the stack and calculate area",
+          "Ignore the bar",
+          "Reset the stack"
+        ],
+        "correct": 1,
+        "explanation": "The algorithm pops the stack and calculates the area for the bar at the top."
+      },
+      {
+        "question": "How is the width of the rectangle calculated?",
+        "hint": "Think about the indices stored in the stack.",
+        "options": [
+          "i - stack[-1]",
+          "i - stack[-1] - 1",
+          "i + stack[-1]",
+          "i * stack[-1]"
+        ],
+        "correct": 1,
+        "explanation": "Subtracting 1 accounts for the gap between the current index and the top of the stack."
+      },
+      {
+        "question": "What is the final result for this histogram?",
+        "hint": "Review all computed areas.",
+        "options": [
+          "15",
+          "18",
+          "20",
+          "25"
+        ],
+        "correct": 2,
+        "explanation": "The largest rectangle area is 20, calculated from the bar heights and widths."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Use this algorithm for histogram problems in coding interviews.",
+    "Optimize by handling edge cases like empty histograms upfront.",
+    "Recognize histogram problems disguised as matrix problems.",
+    "Debug by visualizing the stack at each step.",
+    "Practice variations like circular histograms to broaden understanding."
+  ],
+  "related_problems": [
+    "Largest Rectangle in Histogram (LeetCode #84)",
+    "Maximal Rectangle (LeetCode #85)",
+    "Largest Rectangle in Binary Matrix",
+    "Circular Histogram Problems",
+    "Histogram Water Trapping Problems"
+  ]
+}

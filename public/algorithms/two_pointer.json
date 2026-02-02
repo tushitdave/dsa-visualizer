@@ -1,0 +1,188 @@
+{
+  "algorithm_id": "two_pointer",
+  "name": "Two Pointer",
+  "display_name": "Two Pointer Technique",
+  "category": "Array/String Traversal",
+  "tags": ["array", "string", "pointer", "sorted", "linear"],
+
+  "overview": {
+    "core_idea": "Use two pointers that move toward each other or in the same direction to solve problems in O(n) time instead of O(n²).",
+    "when_to_use": [
+      "Array or string is sorted (or can be sorted)",
+      "Looking for pairs that satisfy a condition",
+      "Removing duplicates in-place",
+      "Partitioning arrays",
+      "Comparing elements from both ends"
+    ],
+    "real_world_analogy": "Like two people searching for each other in a hallway - one starts from each end and they walk toward each other until they meet. Much faster than one person checking every spot!"
+  },
+
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Initialize two pointers",
+        "description": "Start with left pointer at beginning, right pointer at end.",
+        "array": [1, 2, 3, 4, 6, 8, 9],
+        "target": 10,
+        "left": 0,
+        "right": 6,
+        "sum": "1 + 9 = 10",
+        "highlight": "init"
+      },
+      {
+        "title": "Check sum at pointers",
+        "description": "Sum = 1 + 9 = 10. Found the target!",
+        "array": [1, 2, 3, 4, 6, 8, 9],
+        "target": 10,
+        "left": 0,
+        "right": 6,
+        "sum": "1 + 9 = 10 ✓",
+        "highlight": "found"
+      }
+    ]
+  },
+
+  "pseudocode": {
+    "language": "generic",
+    "code": "function twoSum(array, target):\n    left = 0\n    right = array.length - 1\n    \n    while left < right:\n        sum = array[left] + array[right]\n        \n        if sum == target:\n            return [left, right]\n        \n        else if sum < target:\n            left = left + 1\n        \n        else:\n            right = right - 1\n    \n    return []  // No pair found",
+    "annotations": [
+      { "line": 1, "text": "Function takes sorted array and target sum" },
+      { "line": 2, "text": "Left pointer starts at the beginning" },
+      { "line": 3, "text": "Right pointer starts at the end" },
+      { "line": 5, "text": "Continue while pointers haven't crossed" },
+      { "line": 6, "text": "Calculate sum of elements at both pointers" },
+      { "line": 8, "text": "Found the target pair!" },
+      { "line": 11, "text": "Sum too small - need larger numbers, move left pointer right" },
+      { "line": 14, "text": "Sum too large - need smaller numbers, move right pointer left" },
+      { "line": 16, "text": "No valid pair exists" }
+    ],
+    "variables": [
+      { "name": "left", "description": "Pointer starting from beginning" },
+      { "name": "right", "description": "Pointer starting from end" },
+      { "name": "sum", "description": "Current sum of elements at both pointers" }
+    ],
+    "key_operations": [
+      "Calculate sum = array[left] + array[right]",
+      "Move left pointer right if sum too small",
+      "Move right pointer left if sum too large"
+    ],
+    "return_values": [
+      { "value": "[left, right]", "condition": "When sum equals target" },
+      { "value": "[]", "condition": "When pointers cross (no pair found)" }
+    ],
+    "flow_steps": [
+      "Initialize Pointers",
+      "Calculate Sum",
+      "Compare with Target",
+      "Move Pointer",
+      "Return Result"
+    ]
+  },
+
+  "complexity": {
+    "time": {
+      "best": "O(1)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Each pointer moves at most n times, and they only move inward. Total operations = O(n).",
+      "comparison_data": [
+        { "n": 10, "twopointer": 10, "bruteforce": 100 },
+        { "n": 100, "twopointer": 100, "bruteforce": 10000 },
+        { "n": 1000, "twopointer": 1000, "bruteforce": 1000000 },
+        { "n": 10000, "twopointer": 10000, "bruteforce": 100000000 }
+      ]
+    },
+    "space": {
+      "complexity": "O(1)",
+      "explanation": "Only uses two pointer variables regardless of input size."
+    }
+  },
+
+  "variations": [
+    {
+      "name": "Three Sum",
+      "description": "Find three numbers that sum to target.",
+      "use_case": "Extension of two sum for triplets.",
+      "example": {
+        "input": "[-1, 0, 1, 2, -1, -4], target = 0",
+        "output": "[[-1, -1, 2], [-1, 0, 1]]"
+      },
+      "key_change": "Fix one element, use two pointers for remaining"
+    },
+    {
+      "name": "Container With Most Water",
+      "description": "Find two lines that form container with maximum water.",
+      "use_case": "Optimization problems with boundaries.",
+      "example": {
+        "input": "[1, 8, 6, 2, 5, 4, 8, 3, 7]",
+        "output": "49"
+      },
+      "key_change": "Move the pointer with smaller height"
+    },
+    {
+      "name": "Remove Duplicates",
+      "description": "Remove duplicates from sorted array in-place.",
+      "use_case": "Array modification without extra space.",
+      "example": {
+        "input": "[1, 1, 2, 2, 3]",
+        "output": "[1, 2, 3] (length 3)"
+      },
+      "key_change": "Slow pointer marks unique position, fast pointer scans"
+    }
+  ],
+
+  "common_pitfalls": [
+    {
+      "title": "Forgetting Array Must Be Sorted",
+      "problem": "Two pointer technique for sum problems requires sorted input.",
+      "bad_code": "twoSum([3, 1, 2], 4)  // Unsorted!",
+      "good_code": "twoSum([1, 2, 3], 4)  // Sorted first",
+      "explanation": "The logic of moving left/right depends on sorted order."
+    },
+    {
+      "title": "Using <= Instead of <",
+      "problem": "Pointers should not cross or overlap (for pair problems).",
+      "bad_code": "while left <= right  // Allows same element twice",
+      "good_code": "while left < right  // Ensures different elements",
+      "explanation": "For pairs, we need two distinct elements."
+    }
+  ],
+
+  "practice_exercise": {
+    "title": "Two Sum in Sorted Array",
+    "description": "Find two numbers that add up to target.",
+    "array": [1, 2, 3, 4, 6, 8, 9],
+    "target": 10,
+    "steps": [
+      {
+        "question": "Initial pointers: left=0 (value 1), right=6 (value 9). What's the sum?",
+        "hint": "Add the values at both pointer positions",
+        "options": ["8", "9", "10", "11"],
+        "correct": 2,
+        "explanation": "Sum = array[0] + array[6] = 1 + 9 = 10"
+      },
+      {
+        "question": "Sum equals target. What do we return?",
+        "hint": "We found our answer!",
+        "options": ["Move left pointer", "Move right pointer", "Return [0, 6]", "Continue searching"],
+        "correct": 2,
+        "explanation": "We found the pair! Return indices [0, 6]."
+      }
+    ]
+  },
+
+  "pro_tips": [
+    "Always verify the array is sorted before applying two pointers for sum problems.",
+    "For same-direction pointers (fast/slow), think about what each pointer represents.",
+    "Two pointers can also work on two different arrays simultaneously.",
+    "When stuck, ask: 'What condition tells me to move left vs right pointer?'"
+  ],
+
+  "related_problems": [
+    "Two Sum II (LeetCode 167)",
+    "3Sum (LeetCode 15)",
+    "Container With Most Water (LeetCode 11)",
+    "Remove Duplicates from Sorted Array (LeetCode 26)",
+    "Squares of a Sorted Array (LeetCode 977)"
+  ]
+}

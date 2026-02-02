@@ -1,0 +1,295 @@
+{
+  "algorithm_id": "dynamic_programming_with_minimum_cost_calculation",
+  "name": "Dynamic Programming with Minimum Cost Calculation",
+  "display_name": "Dynamic Programming with Minimum Cost Calculation",
+  "category": "Dynamic Programming",
+  "tags": [
+    "dynamic programming",
+    "optimization",
+    "minimum cost",
+    "memoization"
+  ],
+  "overview": {
+    "core_idea": "This algorithm solves optimization problems by breaking them into overlapping subproblems and solving each subproblem only once, storing the results for reuse. It works by systematically exploring all possibilities and selecting the one with the minimum cost.",
+    "when_to_use": [
+      "When the problem can be divided into overlapping subproblems",
+      "When the problem has an optimal substructure (the solution to the whole problem depends on solutions to subproblems)",
+      "When you need to minimize or maximize a cost or value",
+      "When a brute-force approach is too slow due to exponential complexity"
+    ],
+    "real_world_analogy": "Imagine you're planning a road trip with multiple stops, and you want to minimize the total cost of fuel. Instead of recalculating the cost for every possible route repeatedly, you keep a record of the cheapest cost to reach each stop. This way, you can reuse previous calculations and avoid redundant work."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Define the problem and initialize",
+        "description": "Start by defining the cost function and initializing a table (or array) to store the minimum cost for each subproblem. For example, if you're finding the minimum cost to reach the end of an array, initialize the first element with its own cost.",
+        "array": [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Solve subproblems iteratively",
+        "description": "Iterate through the array, calculating the minimum cost for each position using previously computed results. For example, at each step, consider the cost of reaching the current position from all valid previous positions.",
+        "array": [
+          2,
+          3,
+          8,
+          9,
+          5,
+          8
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Return the final result",
+        "description": "After processing all positions, the last entry in the table will contain the minimum cost to solve the entire problem.",
+        "array": [
+          2,
+          3,
+          8,
+          9,
+          5,
+          8
+        ],
+        "highlight": "result"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function minCost(arr):\n    // Line 1: Initialize the DP table\n    dp = new Array(arr.length)\n    dp[0] = arr[0]\n\n    // Line 2: Fill the DP table\n    for i from 1 to arr.length - 1:\n        dp[i] = arr[i] + min(dp[i-1], dp[i-2])\n\n    // Line 3: Return the result\n    return dp[arr.length - 1]",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Initialize a DP table to store the minimum cost for each position."
+      },
+      {
+        "line": 2,
+        "text": "Set the first position's cost to its own value."
+      },
+      {
+        "line": 5,
+        "text": "Iterate through the array to calculate the minimum cost for each position."
+      },
+      {
+        "line": 6,
+        "text": "Use the recurrence relation to compute the cost based on previous results."
+      },
+      {
+        "line": 9,
+        "text": "Return the minimum cost to reach the last position."
+      }
+    ],
+    "variables": [
+      {
+        "name": "dp",
+        "description": "An array storing the minimum cost to reach each position."
+      },
+      {
+        "name": "arr",
+        "description": "The input array representing costs or values."
+      }
+    ],
+    "key_operations": [
+      "Initialization of the DP table",
+      "Iterative computation of minimum costs",
+      "Returning the final result from the DP table"
+    ],
+    "return_values": [
+      {
+        "value": "dp[arr.length - 1]",
+        "condition": "When the computation is successful."
+      },
+      {
+        "value": "-1 or null",
+        "condition": "If the input is invalid or the computation fails."
+      }
+    ],
+    "flow_steps": [
+      "Initialize the DP table",
+      "Iterate through the input array",
+      "Compute the minimum cost for each position",
+      "Store results in the DP table",
+      "Return the final result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "The algorithm processes each element of the input array exactly once, resulting in linear time complexity. The recurrence relation ensures that no subproblem is solved more than once.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "The algorithm uses an array of size n to store the minimum cost for each position. This can be reduced to O(1) if only the last two results are stored."
+    }
+  },
+  "variations": [
+    {
+      "name": "Space-Optimized Variation",
+      "description": "Instead of using an array to store all results, only store the last two results.",
+      "use_case": "When memory usage is a concern.",
+      "example": {
+        "input": [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ],
+        "output": 8
+      },
+      "key_change": "Replace the DP array with two variables to store the last two results."
+    },
+    {
+      "name": "Multi-Step Cost Calculation",
+      "description": "Allows jumps of more than two steps.",
+      "use_case": "When the problem allows variable step sizes.",
+      "example": {
+        "input": [
+          2,
+          1,
+          5,
+          6,
+          2,
+          3
+        ],
+        "output": 7
+      },
+      "key_change": "Modify the recurrence relation to consider more than two previous results."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting Base Cases",
+      "problem": "Not initializing the first element correctly.",
+      "bad_code": "// Incorrect initialization\ndp[0] = 0",
+      "good_code": "// Correct initialization\ndp[0] = arr[0]",
+      "explanation": "The first element must be initialized to its own cost, as there are no previous positions."
+    },
+    {
+      "title": "Pitfall 2: Index Out of Bounds",
+      "problem": "Accessing invalid indices in the recurrence relation.",
+      "bad_code": "dp[i] = arr[i] + dp[i-2]",
+      "good_code": "dp[i] = arr[i] + (i > 1 ? dp[i-2] : 0)",
+      "explanation": "Ensure indices are within bounds to avoid runtime errors."
+    },
+    {
+      "title": "Pitfall 3: Overwriting Results",
+      "problem": "Modifying the DP table incorrectly.",
+      "bad_code": "dp[i] = dp[i-1]",
+      "good_code": "dp[i] = arr[i] + min(dp[i-1], dp[i-2])",
+      "explanation": "Always use the recurrence relation to compute results correctly."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Minimum Cost Path",
+    "description": "Walk through the algorithm step by step to calculate the minimum cost.",
+    "array": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ],
+    "target": "Find the minimum cost to reach the last position.",
+    "steps": [
+      {
+        "question": "What is the base case for the first position?",
+        "hint": "Think about the cost to reach the first position.",
+        "options": [
+          "0",
+          "arr[0]",
+          "arr[1]",
+          "arr[0] + arr[1]"
+        ],
+        "correct": 1,
+        "explanation": "The cost to reach the first position is simply its own value."
+      },
+      {
+        "question": "What is the minimum cost to reach the second position?",
+        "hint": "Consider the cost of the first two positions.",
+        "options": [
+          "arr[1]",
+          "arr[0] + arr[1]",
+          "min(arr[0], arr[1])",
+          "arr[0]"
+        ],
+        "correct": 1,
+        "explanation": "The cost to reach the second position is the sum of the first two values."
+      },
+      {
+        "question": "How do you calculate the cost for the third position?",
+        "hint": "Use the recurrence relation.",
+        "options": [
+          "arr[2]",
+          "arr[2] + dp[1]",
+          "arr[2] + min(dp[1], dp[0])",
+          "arr[2] + dp[0]"
+        ],
+        "correct": 2,
+        "explanation": "The cost to reach the third position is its value plus the minimum cost of the previous two positions."
+      },
+      {
+        "question": "What is the final minimum cost?",
+        "hint": "Look at the last value in the DP table.",
+        "options": [
+          "15",
+          "16",
+          "17",
+          "18"
+        ],
+        "correct": 2,
+        "explanation": "The final cost is the last value in the DP table, which represents the minimum cost to reach the end."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Always define the recurrence relation clearly before coding.",
+    "Use space optimization techniques when possible.",
+    "Test your algorithm on edge cases like empty arrays or single-element arrays.",
+    "Visualize the DP table to debug issues.",
+    "Understand the problem's constraints to avoid unnecessary computations."
+  ],
+  "related_problems": [
+    "Climbing Stairs (LeetCode 70)",
+    "Minimum Path Sum (LeetCode 64)",
+    "House Robber (LeetCode 198)",
+    "Frog Jump (AtCoder Educational DP Contest)",
+    "Paint House (LeetCode 256)"
+  ]
+}

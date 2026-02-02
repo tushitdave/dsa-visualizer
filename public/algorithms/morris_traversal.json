@@ -1,0 +1,280 @@
+{
+  "algorithm_id": "morris_traversal",
+  "name": "Morris Traversal",
+  "display_name": "Morris Traversal",
+  "category": "Tree Traversal",
+  "tags": [
+    "Binary Trees",
+    "Inorder Traversal",
+    "Constant Space",
+    "Iterative Algorithms"
+  ],
+  "overview": {
+    "core_idea": "Morris Traversal is an algorithm to perform an in-order traversal of a binary tree without using recursion or a stack. It modifies the tree temporarily by creating links (threads) to the predecessor nodes, enabling traversal in constant space.",
+    "when_to_use": [
+      "When you need to traverse a binary tree in-order without recursion or additional memory",
+      "When memory usage is a critical constraint",
+      "When the tree structure can be temporarily modified",
+      "When you want to avoid the overhead of maintaining a stack or recursion"
+    ],
+    "real_world_analogy": "Imagine walking through a museum where you leave breadcrumbs at each exhibit to remember your way back. Instead of carrying a map (stack) or relying on a guide (recursion), you use the breadcrumbs (temporary links) to navigate efficiently."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Start at the root",
+        "description": "Begin the traversal at the root of the tree. If the left child exists, find the rightmost node in the left subtree (predecessor).",
+        "array": [
+          4,
+          2,
+          5,
+          1,
+          3
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Create a temporary link",
+        "description": "If the predecessor's right child is null, create a temporary link from the predecessor to the current node. Move to the left child.",
+        "array": [
+          4,
+          2,
+          5,
+          1,
+          3
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Visit the node",
+        "description": "If the left child does not exist or the temporary link is already established, visit the current node. Remove the temporary link if it exists, and move to the right child.",
+        "array": [
+          4,
+          2,
+          5,
+          1,
+          3
+        ],
+        "highlight": "visit"
+      },
+      {
+        "title": "Step 4: Repeat until done",
+        "description": "Continue this process until all nodes are visited. The tree is restored to its original structure by removing all temporary links.",
+        "array": [
+          4,
+          2,
+          5,
+          1,
+          3
+        ],
+        "highlight": "done"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function morrisTraversal(root):\n    current = root\n    while current is not null:\n        if current.left is null:\n            visit(current)\n            current = current.right\n        else:\n            predecessor = current.left\n            while predecessor.right is not null and predecessor.right is not current:\n                predecessor = predecessor.right\n            \n            if predecessor.right is null:\n                predecessor.right = current\n                current = current.left\n            else:\n                predecessor.right = null\n                visit(current)\n                current = current.right",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Define the function and initialize the current node to the root."
+      },
+      {
+        "line": 2,
+        "text": "Iterate through the tree until all nodes are processed."
+      },
+      {
+        "line": 3,
+        "text": "If the current node has no left child, visit it and move to the right child."
+      },
+      {
+        "line": 6,
+        "text": "Find the predecessor node in the left subtree."
+      },
+      {
+        "line": 9,
+        "text": "If the predecessor's right child is null, create a temporary link to the current node."
+      },
+      {
+        "line": 12,
+        "text": "If the temporary link exists, remove it, visit the current node, and move to the right child."
+      }
+    ],
+    "variables": [
+      { "name": "current", "description": "Current node being processed" },
+      { "name": "predecessor", "description": "Inorder predecessor of current node" },
+      { "name": "root", "description": "Root of the binary tree" }
+    ],
+    "key_operations": [
+      "Find predecessor (rightmost node in left subtree)",
+      "Create temporary thread link to current node",
+      "Remove thread link after visiting node"
+    ],
+    "return_values": [
+      { "value": "void", "condition": "Traversal visits all nodes in-order" },
+      { "value": "result array", "condition": "If collecting visited nodes" }
+    ],
+    "flow_steps": [
+      "Start at Root",
+      "Find Predecessor",
+      "Create Thread",
+      "Visit Node",
+      "Remove Thread"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Each node is visited at most twice: once to create a temporary link and once to remove it. This results in a linear time complexity of O(n).",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(1)",
+      "explanation": "No additional memory is used beyond a few pointers. The algorithm modifies the tree temporarily to avoid using a stack or recursion."
+    }
+  },
+  "variations": [
+    {
+      "name": "Preorder Morris Traversal",
+      "description": "A variation of Morris Traversal that performs a preorder traversal instead of in-order.",
+      "use_case": "Use this when a preorder traversal is required with constant space.",
+      "example": {
+        "input": "Binary tree: [4, 2, 5, 1, 3]",
+        "output": "[4, 2, 1, 3, 5]"
+      },
+      "key_change": "Visit the current node before moving to the left child."
+    },
+    {
+      "name": "Postorder Morris Traversal",
+      "description": "A more complex variation that performs a postorder traversal using constant space.",
+      "use_case": "Use this when postorder traversal is required without recursion or a stack.",
+      "example": {
+        "input": "Binary tree: [4, 2, 5, 1, 3]",
+        "output": "[1, 3, 2, 5, 4]"
+      },
+      "key_change": "Reverse the order of nodes in the right subtree before visiting."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to remove the temporary link",
+      "problem": "If the temporary link is not removed, the tree structure is altered permanently.",
+      "bad_code": "// Incorrect\npredecessor.right = current;",
+      "good_code": "// Correct\npredecessor.right = null;",
+      "explanation": "Failing to remove the link causes the traversal to enter an infinite loop or corrupts the tree."
+    },
+    {
+      "title": "Pitfall 2: Not handling edge cases with no left subtree",
+      "problem": "The algorithm may skip nodes without left children if not handled properly.",
+      "bad_code": "if current.left is null: continue;",
+      "good_code": "if current.left is null: visit(current); current = current.right;",
+      "explanation": "Nodes without left children must still be visited before moving to the right child."
+    },
+    {
+      "title": "Pitfall 3: Infinite loop in finding the predecessor",
+      "problem": "If the condition for finding the predecessor is incorrect, the algorithm may loop indefinitely.",
+      "bad_code": "while predecessor.right is not null:",
+      "good_code": "while predecessor.right is not null and predecessor.right is not current:",
+      "explanation": "The condition must ensure the loop terminates when the predecessor points back to the current node."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Morris Traversal Example",
+    "description": "Perform Morris Traversal on the following binary tree: [4, 2, 5, 1, 3].",
+    "array": [
+      4,
+      2,
+      5,
+      1,
+      3
+    ],
+    "target": "Perform in-order traversal",
+    "steps": [
+      {
+        "question": "What is the first node visited?",
+        "hint": "Start at the root and find the leftmost node.",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "correct": 0,
+        "explanation": "The leftmost node is visited first in in-order traversal."
+      },
+      {
+        "question": "What happens after visiting node 1?",
+        "hint": "Check for a temporary link to the parent.",
+        "options": [
+          "Move to node 2",
+          "Move to node 3",
+          "Move to node 4",
+          "Move to node 5"
+        ],
+        "correct": 0,
+        "explanation": "The algorithm moves back to node 2 via the temporary link."
+      },
+      {
+        "question": "What is the next node visited after node 2?",
+        "hint": "Continue in in-order traversal.",
+        "options": [
+          "1",
+          "3",
+          "4",
+          "5"
+        ],
+        "correct": 1,
+        "explanation": "Node 3 is visited next as it is the right child of node 2."
+      },
+      {
+        "question": "What is the final node visited?",
+        "hint": "The last node in in-order traversal is the rightmost node.",
+        "options": [
+          "2",
+          "3",
+          "4",
+          "5"
+        ],
+        "correct": 3,
+        "explanation": "Node 5 is the rightmost node and is visited last."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Use Morris Traversal when memory is constrained.",
+    "Remember to restore the tree structure by removing temporary links.",
+    "Practice on small binary trees to understand the flow.",
+    "Be cautious with edge cases like single-node trees or completely unbalanced trees.",
+    "Understand the difference between Morris Traversal and traditional stack-based traversal."
+  ],
+  "related_problems": [
+    "Binary Tree Inorder Traversal (LeetCode 94)",
+    "Recover Binary Search Tree (LeetCode 99)",
+    "Flatten Binary Tree to Linked List (LeetCode 114)",
+    "Binary Tree Preorder Traversal (LeetCode 144)",
+    "Binary Tree Postorder Traversal (LeetCode 145)"
+  ]
+}

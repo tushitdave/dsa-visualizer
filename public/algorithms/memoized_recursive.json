@@ -1,0 +1,281 @@
+{
+  "algorithm_id": "memoized_recursive",
+  "name": "Memoized Recursive Approach",
+  "display_name": "Memoized Recursive Approach",
+  "category": "Dynamic Programming",
+  "tags": [
+    "recursion",
+    "memoization",
+    "optimization",
+    "dynamic programming"
+  ],
+  "overview": {
+    "core_idea": "The memoized recursive approach optimizes a standard recursive algorithm by storing the results of subproblems in a cache (memoization table) to avoid redundant computations. This technique ensures that each subproblem is solved only once, significantly improving efficiency.",
+    "when_to_use": [
+      "When the problem can be broken down into overlapping subproblems",
+      "When the problem exhibits optimal substructure (solutions to subproblems can be reused)",
+      "When a naive recursive solution is too slow due to repeated calculations",
+      "When you need to optimize a top-down approach without rewriting it iteratively"
+    ],
+    "real_world_analogy": "Imagine you are solving a jigsaw puzzle. If you've already figured out where a piece fits, you write it down in a notebook so you don't have to try placing it again. This saves time and effort when solving the rest of the puzzle."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Start with the base case",
+        "description": "Identify the simplest cases where the solution is known directly. For example, in the Fibonacci sequence, F(0) = 0 and F(1) = 1.",
+        "array": [
+          0,
+          1,
+          1,
+          2,
+          3,
+          5,
+          8
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Solve recursively and store results",
+        "description": "For each recursive call, check if the result is already in the memoization table. If not, compute it, store it in the table, and return the result.",
+        "array": [
+          0,
+          1,
+          1,
+          2,
+          3,
+          5,
+          8
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Use stored results to avoid recomputation",
+        "description": "When a subproblem is encountered again, retrieve its solution from the memoization table instead of recomputing it.",
+        "array": [
+          0,
+          1,
+          1,
+          2,
+          3,
+          5,
+          8
+        ],
+        "highlight": "reuse"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function memoizedRecursive(n, memo):\n    // Line 1: Base case\n    if n <= 1:\n        return n\n\n    // Line 2: Check memoization table\n    if memo[n] is not null:\n        return memo[n]\n\n    // Line 3: Recursive computation\n    memo[n] = memoizedRecursive(n-1, memo) + memoizedRecursive(n-2, memo)\n\n    // Line 4: Return the result\n    return memo[n]",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Check if the input is a base case (e.g., Fibonacci F(0) or F(1))"
+      },
+      {
+        "line": 4,
+        "text": "If the result for this input is already computed, return it from the memoization table"
+      },
+      {
+        "line": 7,
+        "text": "Compute the result recursively and store it in the memoization table"
+      },
+      {
+        "line": 10,
+        "text": "Return the computed or cached result"
+      }
+    ],
+    "variables": [
+      {
+        "name": "n",
+        "description": "The current input for which the result is being computed"
+      },
+      {
+        "name": "memo",
+        "description": "An array or dictionary used to store results of subproblems"
+      }
+    ],
+    "key_operations": [
+      "Check if the input is a base case",
+      "Retrieve the result from the memoization table if available",
+      "Compute the result recursively if not already cached",
+      "Store the computed result in the memoization table"
+    ],
+    "return_values": [
+      {
+        "value": "The result of the computation",
+        "condition": "When the computation is successful"
+      },
+      {
+        "value": "null or error",
+        "condition": "If the input is invalid"
+      }
+    ],
+    "flow_steps": [
+      "Initialize the memoization table",
+      "Check for base cases",
+      "Check the memoization table for cached results",
+      "Compute the result recursively if not cached",
+      "Store the result and return it"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "The time complexity is O(n) because each subproblem is solved only once and stored in the memoization table. Subsequent calls simply retrieve the result from the table, which is an O(1) operation.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 89
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": "1.27e+21"
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": "Infinity"
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": "Infinity"
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "The space complexity is O(n) due to the memoization table storing results for all subproblems and the recursive call stack."
+    }
+  },
+  "variations": [
+    {
+      "name": "Bottom-Up Dynamic Programming",
+      "description": "Instead of recursion, solve the problem iteratively from the smallest subproblem to the largest.",
+      "use_case": "When you want to avoid the overhead of recursive calls.",
+      "example": {
+        "input": "n = 5",
+        "output": "5",
+        "key_change": "Replace recursion with a loop."
+      }
+    },
+    {
+      "name": "Tabulation",
+      "description": "A variation of bottom-up DP where results are stored in a table as they are computed.",
+      "use_case": "When you want to minimize space usage by only storing necessary results.",
+      "example": {
+        "input": "n = 5",
+        "output": "5",
+        "key_change": "Use a single array instead of a full memoization table."
+      }
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to initialize the memoization table",
+      "problem": "The algorithm will fail if the memoization table is not properly initialized.",
+      "bad_code": "memo = []",
+      "good_code": "memo = [null] * (n+1)",
+      "explanation": "The memoization table must be large enough to store results for all subproblems."
+    },
+    {
+      "title": "Pitfall 2: Not checking the memoization table",
+      "problem": "The algorithm will recompute results unnecessarily.",
+      "bad_code": "return memoizedRecursive(n-1, memo) + memoizedRecursive(n-2, memo)",
+      "good_code": "if memo[n] is not null: return memo[n]",
+      "explanation": "Always check the memoization table before computing a result."
+    },
+    {
+      "title": "Pitfall 3: Stack overflow for large inputs",
+      "problem": "Recursive calls can exceed the stack limit for large inputs.",
+      "bad_code": "memoizedRecursive(100000, memo)",
+      "good_code": "Use an iterative approach for large inputs",
+      "explanation": "Switch to a bottom-up approach to avoid stack overflow."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Fibonacci Numbers",
+    "description": "Walk through the memoized recursive approach to compute Fibonacci numbers.",
+    "array": [
+      0,
+      1,
+      1,
+      2,
+      3,
+      5,
+      8,
+      13
+    ],
+    "target": "Compute F(6)",
+    "steps": [
+      {
+        "question": "What is the base case for F(0)?",
+        "hint": "Think about the definition of Fibonacci numbers.",
+        "options": [
+          "0",
+          "1",
+          "2",
+          "None of the above"
+        ],
+        "correct": 0,
+        "explanation": "F(0) is defined as 0."
+      },
+      {
+        "question": "What happens when F(3) is computed?",
+        "hint": "Check if F(3) is already in the memoization table.",
+        "options": [
+          "It is recomputed",
+          "It is retrieved from the table",
+          "Both",
+          "None"
+        ],
+        "correct": 1,
+        "explanation": "If F(3) is already computed, it is retrieved from the table."
+      },
+      {
+        "question": "How many recursive calls are saved by memoization?",
+        "hint": "Compare with a naive recursive approach.",
+        "options": [
+          "None",
+          "Some",
+          "All",
+          "Depends on input"
+        ],
+        "correct": 2,
+        "explanation": "Memoization avoids all redundant recursive calls."
+      },
+      {
+        "question": "What is the final result for F(6)?",
+        "hint": "Use the memoization table to compute.",
+        "options": [
+          "5",
+          "8",
+          "13",
+          "21"
+        ],
+        "correct": 2,
+        "explanation": "F(6) = F(5) + F(4) = 8 + 5 = 13."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Always initialize the memoization table to avoid null pointer errors.",
+    "Use a hash map for memoization if the input range is sparse.",
+    "Switch to an iterative approach for very large inputs to avoid stack overflow.",
+    "Practice identifying overlapping subproblems to recognize when memoization is applicable.",
+    "Combine memoization with other techniques like pruning to further optimize."
+  ],
+  "related_problems": [
+    "Fibonacci Number (LeetCode 509)",
+    "Climbing Stairs (LeetCode 70)",
+    "House Robber (LeetCode 198)",
+    "Unique Paths (LeetCode 62)",
+    "Partition Equal Subset Sum (LeetCode 416)"
+  ]
+}

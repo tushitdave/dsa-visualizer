@@ -1,0 +1,5 @@
+{
+  "name": "AlgoInsight",
+  "description": "An interactive algorithm visualizer with step-by-step trace generation, active learning quizzes, and cyberpunk aesthetics.",
+  "requestFramePermissions": []
+}

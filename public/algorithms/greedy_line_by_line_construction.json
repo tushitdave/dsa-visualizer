@@ -1,0 +1,302 @@
+{
+  "algorithm_id": "greedy_line_by_line_construction",
+  "name": "Greedy Line-by-Line Construction",
+  "display_name": "Greedy Line-by-Line Construction",
+  "category": "Greedy",
+  "tags": [
+    "greedy",
+    "optimization",
+    "line construction",
+    "text formatting"
+  ],
+  "overview": {
+    "core_idea": "The Greedy Line-by-Line Construction algorithm is used to divide data (e.g., words, elements) into lines or groups while minimizing some cost function, such as wasted space or uneven distribution. It works by making locally optimal choices at each step, assuming they lead to a globally optimal solution.",
+    "when_to_use": [
+      "When you need to split data into groups or lines efficiently",
+      "When minimizing a cost function like wasted space or unevenness is important",
+      "When the problem can be broken into smaller, independent decisions",
+      "When a greedy approach guarantees an optimal or near-optimal solution"
+    ],
+    "real_world_analogy": "Imagine packing items into boxes. You start with the first box and keep adding items until it\u2019s full, then move to the next box. You don\u2019t look ahead to see if rearranging items would save space\u2014you just make the best decision for the current box."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize variables",
+        "description": "Start with an empty line and initialize variables to track the current line's capacity and the result.",
+        "array": [],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Process each element",
+        "description": "Iterate through the input elements. If adding an element exceeds the current line's capacity, finalize the current line and start a new one.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5,
+          9
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Finalize the last line",
+        "description": "After processing all elements, ensure the last line is added to the result.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5,
+          9
+        ],
+        "highlight": "finalize"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function greedyLineByLine(input, maxCapacity):\n    // Initialize variables\n    currentLine = []\n    result = []\n    currentCapacity = 0\n\n    // Process each element\n    for element in input:\n        if currentCapacity + element > maxCapacity:\n            result.append(currentLine) // Save the current line\n            currentLine = [] // Start a new line\n            currentCapacity = 0\n        currentLine.append(element)\n        currentCapacity += element\n\n    // Finalize the last line\n    if currentLine:\n        result.append(currentLine)\n\n    return result",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Define the function with input data and maximum capacity per line."
+      },
+      {
+        "line": 2,
+        "text": "Initialize an empty list to store the current line."
+      },
+      {
+        "line": 3,
+        "text": "Initialize the result list to store all lines."
+      },
+      {
+        "line": 4,
+        "text": "Track the current line's capacity."
+      },
+      {
+        "line": 6,
+        "text": "Iterate through each element in the input data."
+      },
+      {
+        "line": 7,
+        "text": "Check if adding the element exceeds the maximum capacity."
+      },
+      {
+        "line": 8,
+        "text": "If so, save the current line to the result."
+      },
+      {
+        "line": 9,
+        "text": "Start a new line and reset the capacity."
+      },
+      {
+        "line": 11,
+        "text": "Add the element to the current line and update the capacity."
+      },
+      {
+        "line": 14,
+        "text": "After the loop, add the last line if it exists."
+      },
+      {
+        "line": 16,
+        "text": "Return the result containing all lines."
+      }
+    ],
+    "variables": [
+      {
+        "name": "currentLine",
+        "description": "Stores the elements in the current line."
+      },
+      {
+        "name": "result",
+        "description": "Stores all finalized lines."
+      },
+      {
+        "name": "currentCapacity",
+        "description": "Tracks the total capacity of the current line."
+      }
+    ],
+    "key_operations": [
+      "Check if adding an element exceeds the line's capacity.",
+      "Finalize and save the current line when full.",
+      "Start a new line and reset variables."
+    ],
+    "return_values": [
+      {
+        "value": "result",
+        "condition": "When all elements are processed successfully."
+      },
+      {
+        "value": "[]",
+        "condition": "When the input is empty."
+      }
+    ],
+    "flow_steps": [
+      "Initialize variables",
+      "Iterate through input elements",
+      "Check capacity and finalize lines as needed",
+      "Finalize the last line",
+      "Return the result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "The algorithm processes each element exactly once, making decisions in constant time for each element. Thus, the time complexity is linear with respect to the number of elements.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "The algorithm requires space to store the result and the current line, both of which grow proportionally to the input size."
+    }
+  },
+  "variations": [
+    {
+      "name": "Justified Line Construction",
+      "description": "Adds spacing between elements to justify lines.",
+      "use_case": "When formatting text for display.",
+      "example": {
+        "input": "['word1', 'word2', 'word3'], maxCapacity = 10",
+        "output": "[['word1 word2'], ['word3']]"
+      },
+      "key_change": "Add logic to insert spaces between elements."
+    },
+    {
+      "name": "Weighted Line Construction",
+      "description": "Considers weights or priorities for elements.",
+      "use_case": "When elements have different importance or sizes.",
+      "example": {
+        "input": "[{'value': 3, 'weight': 2}, {'value': 5, 'weight': 1}], maxCapacity = 5",
+        "output": "[[{'value': 3}], [{'value': 5}]]"
+      },
+      "key_change": "Add logic to account for weights during capacity checks."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to finalize the last line",
+      "problem": "The last line is not added to the result if the input ends without exceeding capacity.",
+      "bad_code": "// Missing finalization\nif currentLine:\n    pass",
+      "good_code": "// Correct finalization\nif currentLine:\n    result.append(currentLine)",
+      "explanation": "Always check and add the last line after processing all elements."
+    },
+    {
+      "title": "Pitfall 2: Incorrect capacity calculation",
+      "problem": "Capacity checks fail if the logic for adding elements is incorrect.",
+      "bad_code": "if currentCapacity + element < maxCapacity:",
+      "good_code": "if currentCapacity + element > maxCapacity:",
+      "explanation": "Ensure the condition properly checks for exceeding capacity."
+    },
+    {
+      "title": "Pitfall 3: Not handling empty input",
+      "problem": "The algorithm may fail or return incorrect results for empty input.",
+      "bad_code": "if not input:\n    return None",
+      "good_code": "if not input:\n    return []",
+      "explanation": "Return an empty result for empty input to maintain consistency."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Line Construction",
+    "description": "Walk through the algorithm step by step to split elements into lines.",
+    "array": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ],
+    "target": "maxCapacity = 10",
+    "steps": [
+      {
+        "question": "What happens after processing the first element (3)?",
+        "hint": "Check if 3 fits within the current capacity.",
+        "options": [
+          "Start a new line",
+          "Add to the current line",
+          "Skip the element",
+          "Finalize the result"
+        ],
+        "correct": 1,
+        "explanation": "3 fits within the capacity, so it is added to the current line."
+      },
+      {
+        "question": "What happens after processing the second element (1)?",
+        "hint": "Check the updated capacity.",
+        "options": [
+          "Start a new line",
+          "Add to the current line",
+          "Skip the element",
+          "Finalize the result"
+        ],
+        "correct": 1,
+        "explanation": "1 is added to the current line, as the capacity is not exceeded."
+      },
+      {
+        "question": "What happens when the capacity is exceeded?",
+        "hint": "Think about what the algorithm does when a line is full.",
+        "options": [
+          "Start a new line",
+          "Add to the current line",
+          "Skip the element",
+          "Finalize the result"
+        ],
+        "correct": 0,
+        "explanation": "When the capacity is exceeded, the current line is finalized, and a new line is started."
+      },
+      {
+        "question": "What is the final result?",
+        "hint": "Review all lines created during the process.",
+        "options": [
+          "[[3, 1, 4], [1, 5], [9, 2, 6]]",
+          "[[3, 1], [4, 1, 5], [9, 2, 6]]",
+          "[[3, 1, 4, 1], [5, 9, 2, 6]]",
+          "[[3, 1, 4], [1, 5, 9], [2, 6]]"
+        ],
+        "correct": 0,
+        "explanation": "The elements are split into lines based on the capacity constraints."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Use this algorithm for problems involving grouping or partitioning.",
+    "Optimize by pre-sorting elements if necessary.",
+    "Recognize when a greedy approach guarantees optimality.",
+    "Debug by printing intermediate lines and capacities.",
+    "Practice with variations like weighted or justified line construction."
+  ],
+  "related_problems": [
+    "Text Justification (LeetCode 68)",
+    "Partition Labels (LeetCode 763)",
+    "Bin Packing Problem",
+    "Interval Scheduling Maximization",
+    "Knapsack Problem (Greedy Variation)"
+  ]
+}

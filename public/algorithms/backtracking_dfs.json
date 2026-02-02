@@ -1,0 +1,96 @@
+{
+  "name": "Backtracking (DFS)",
+  "display_name": "Backtracking using Depth-First Search",
+  "category": "Search and Optimization",
+  "overview": {
+    "core_idea": "Backtracking is a systematic way to explore all possible configurations of a problem by incrementally building solutions and abandoning them (backtracking) if they fail to satisfy the problem constraints.",
+    "when_to_use": [
+      "When the problem involves exploring all possible combinations or permutations.",
+      "When constraints need to be checked dynamically during the search process.",
+      "When the solution space is too large to brute-force and pruning invalid paths can optimize the search."
+    ],
+    "real_world_analogy": "Imagine trying to solve a maze: you take one path, and if it leads to a dead end, you backtrack to the previous junction and try another path until you find the exit or exhaust all possibilities."
+  },
+  "pseudocode": {
+    "code": "function backtrack(current_state, solution):\n    if is_solution(current_state):\n        process_solution(solution)\n        return\n    for choice in valid_choices(current_state):\n        make_choice(current_state, choice)\n        backtrack(current_state, solution)\n        undo_choice(current_state, choice)",
+    "annotations": [
+      {
+        "line": 1,
+        "note": "Define the recursive backtracking function with the current state and solution as inputs."
+      },
+      {
+        "line": 2,
+        "note": "Check if the current state satisfies the problem's constraints and is a valid solution."
+      },
+      {
+        "line": 3,
+        "note": "If a solution is found, process it (e.g., store it, print it) and return to avoid further exploration."
+      },
+      {
+        "line": 4,
+        "note": "Iterate over all valid choices for the current state."
+      },
+      {
+        "line": 5,
+        "note": "Apply a choice to the current state, modifying it to explore this path."
+      },
+      {
+        "line": 6,
+        "note": "Recursively call the backtracking function to explore deeper levels of the solution space."
+      },
+      {
+        "line": 7,
+        "note": "Undo the choice to restore the state and explore other paths (backtracking)."
+      }
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(1)",
+      "average": "O(b^d)",
+      "worst": "O(b^d)",
+      "explanation": "The time complexity depends on the branching factor (b) and the depth of the solution space (d). In the worst case, all possible configurations are explored."
+    },
+    "space": {
+      "complexity": "O(d)",
+      "explanation": "Space complexity is determined by the recursion stack depth, which corresponds to the depth of the solution space."
+    }
+  },
+  "variations": [
+    {
+      "name": "Constraint Satisfaction Problems (CSP) Backtracking",
+      "description": "Specialized backtracking for problems with constraints, such as Sudoku or N-Queens.",
+      "use_case": "Use this variation when constraints can be dynamically checked to prune invalid paths early."
+    },
+    {
+      "name": "Memoized Backtracking",
+      "description": "Combines backtracking with memoization to avoid redundant exploration of the same state.",
+      "use_case": "Use this variation when the problem has overlapping subproblems, such as in dynamic programming."
+    },
+    {
+      "name": "Iterative DFS Backtracking",
+      "description": "Uses an explicit stack instead of recursion to implement backtracking.",
+      "use_case": "Use this variation when recursion depth might exceed system limits or when iterative approaches are preferred."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "pitfall": "Not pruning invalid paths early.",
+      "solution": "Implement constraint checks at each step to avoid unnecessary exploration."
+    },
+    {
+      "pitfall": "Infinite recursion due to missing base case.",
+      "solution": "Ensure the base case is correctly defined and terminates the recursion."
+    },
+    {
+      "pitfall": "Modifying shared state without undoing changes.",
+      "solution": "Always revert changes to the state after exploring a path to avoid corrupting other paths."
+    }
+  ],
+  "practice_exercise": {
+    "problem": "Solve the N-Queens problem: Place N queens on an NxN chessboard such that no two queens attack each other.",
+    "hint": "Use backtracking to place queens row by row, checking for conflicts before placing each queen.",
+    "solution_approach": "Start with an empty board and recursively place queens in each row. For each row, try all columns and check if the placement is valid (no conflicts in rows, columns, or diagonals). If valid, proceed to the next row; otherwise, backtrack and try the next column."
+  },
+  "algorithm_id": "backtracking_dfs"
+}
