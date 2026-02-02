@@ -2,6 +2,8 @@
 
 **Interactive Algorithm Learning & Visualization Platform**
 
+![AlgoInsight Demo](demo.gif)
+
 AlgoInsight is an educational platform that helps developers master Data Structures and Algorithms through interactive visualizations, step-by-step learning journeys, and hands-on practice exercises.
 
 ## Features
