@@ -41,27 +41,86 @@ const AlgorithmPseudocode: React.FC<PseudocodeProps> = ({ pseudocode }) => {
     }
   };
 
-  const highlightSyntax = (line: string) => {
+  /**
+   * SECURITY FIX: Safe syntax highlighting using React elements instead of dangerouslySetInnerHTML
+   * This prevents XSS attacks from malicious pseudocode content
+   */
+  const highlightSyntax = (line: string): React.ReactNode[] => {
     const keywords = ['function', 'if', 'else', 'while', 'return', 'for', 'in', 'and', 'or', 'not'];
-    const operators = ['==', '!=', '<=', '>=', '<', '>', '=', '+', '-', '*', '/', '%'];
 
-    let result = line;
+    // Tokenize the line for safe rendering
+    const tokens: { text: string; type: 'keyword' | 'number' | 'string' | 'function' | 'comment' | 'text' }[] = [];
 
-    keywords.forEach(keyword => {
-      const regex = new RegExp(`\\b(${keyword})\\b`, 'g');
-      result = result.replace(regex, `<span class="text-purple-400 font-bold">$1</span>`);
+    // Check for comment first (takes priority)
+    const commentMatch = line.match(/(\/\/.*$|#.*$)/);
+    if (commentMatch && commentMatch.index !== undefined) {
+      const beforeComment = line.slice(0, commentMatch.index);
+      const comment = commentMatch[0];
+
+      // Process before comment
+      if (beforeComment) {
+        tokenizeLine(beforeComment, tokens, keywords);
+      }
+      tokens.push({ text: comment, type: 'comment' });
+    } else {
+      tokenizeLine(line, tokens, keywords);
+    }
+
+    // Convert tokens to React elements
+    return tokens.map((token, idx) => {
+      switch (token.type) {
+        case 'keyword':
+          return <span key={idx} className="text-purple-400 font-bold">{token.text}</span>;
+        case 'number':
+          return <span key={idx} className="text-orange-400">{token.text}</span>;
+        case 'string':
+          return <span key={idx} className="text-green-400">{token.text}</span>;
+        case 'function':
+          return <span key={idx} className="text-cyan-400">{token.text}</span>;
+        case 'comment':
+          return <span key={idx} className="text-slate-500 italic">{token.text}</span>;
+        default:
+          return <span key={idx}>{token.text}</span>;
+      }
     });
+  };
 
-    result = result.replace(/\b(\d+)\b/g, '<span class="text-orange-400">$1</span>');
+  /**
+   * Helper function to tokenize a line (without comments)
+   */
+  const tokenizeLine = (
+    text: string,
+    tokens: { text: string; type: 'keyword' | 'number' | 'string' | 'function' | 'comment' | 'text' }[],
+    keywords: string[]
+  ) => {
+    // Regex to match different token types
+    const tokenRegex = /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\b\d+\b|\b\w+\b|\(|[^\s\w"']+|\s+)/g;
+    let match;
+    let lastIndex = 0;
 
-    result = result.replace(/"([^"]*)"/g, '<span class="text-green-400">"$1"</span>');
-    result = result.replace(/'([^']*)'/g, '<span class="text-green-400">\'$1\'</span>');
+    while ((match = tokenRegex.exec(text)) !== null) {
+      const token = match[0];
 
-    result = result.replace(/(\w+)(\()/g, '<span class="text-cyan-400">$1</span>$2');
-
-    result = result.replace(/(\/\/.*$|#.*$)/gm, '<span class="text-slate-500 italic">$1</span>');
-
-    return result;
+      // Check token type
+      if (token.startsWith('"') || token.startsWith("'")) {
+        tokens.push({ text: token, type: 'string' });
+      } else if (/^\d+$/.test(token)) {
+        tokens.push({ text: token, type: 'number' });
+      } else if (keywords.includes(token)) {
+        tokens.push({ text: token, type: 'keyword' });
+      } else if (/^\w+$/.test(token)) {
+        // Check if next character is '(' to identify function calls
+        const nextChar = text[tokenRegex.lastIndex];
+        if (nextChar === '(') {
+          tokens.push({ text: token, type: 'function' });
+        } else {
+          tokens.push({ text: token, type: 'text' });
+        }
+      } else {
+        tokens.push({ text: token, type: 'text' });
+      }
+      lastIndex = tokenRegex.lastIndex;
+    }
   };
 
   return (
@@ -144,10 +203,9 @@ const AlgorithmPseudocode: React.FC<PseudocodeProps> = ({ pseudocode }) => {
                       {idx + 1}
                     </span>
 
-                    <span
-                      className={`flex-1 ${isEmpty ? 'h-6' : ''} text-slate-200`}
-                      dangerouslySetInnerHTML={{ __html: highlightSyntax(line) || '&nbsp;' }}
-                    />
+                    <span className={`flex-1 ${isEmpty ? 'h-6' : ''} text-slate-200`}>
+                      {isEmpty ? '\u00A0' : highlightSyntax(line)}
+                    </span>
 
                     {annotation && (
                       <span className={`ml-4 flex-shrink-0 transition-opacity ${

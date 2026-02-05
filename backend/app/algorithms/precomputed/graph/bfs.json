@@ -1,0 +1,176 @@
+{
+  "algorithm_id": "bfs",
+  "algorithm_name": "Breadth-First Search",
+  "category": "graph",
+  "complexity": {
+    "time": {
+      "best": "O(V + E)",
+      "average": "O(V + E)",
+      "worst": "O(V + E)",
+      "explanation": "Visits each vertex once (V) and explores each edge once (E). Consistent performance regardless of graph structure."
+    },
+    "space": {
+      "complexity": "O(V)",
+      "explanation": "Queue can hold up to V vertices in worst case (complete graph). Also need visited set of size V."
+    }
+  },
+  "strategy": "Level-by-Level Graph Traversal",
+  "strategy_details": "BFS explores a graph level by level, starting from a source vertex. It uses a queue to track vertices to visit, ensuring all neighbors at the current level are processed before moving deeper. This guarantees the shortest path in unweighted graphs.",
+  "templates": {
+    "small_6": {
+      "sample_input": {
+        "vertices": 6,
+        "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+        "start": 0
+      },
+      "frames": [
+        {
+          "step_id": 0,
+          "commentary": "**BFS Starting** from vertex 0. Graph has 6 vertices and 7 edges. Initialize queue with [0] and mark 0 as visited.",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "queue": [0],
+              "visited": [0],
+              "current": 0
+            },
+            "highlights": ["vertex_0"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 1,
+          "commentary": "**Dequeue vertex 0**. Explore neighbors: 1 and 2. Add unvisited neighbors to queue. Queue: [1, 2].",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "queue": [1, 2],
+              "visited": [0, 1, 2],
+              "current": 0,
+              "level": 0
+            },
+            "highlights": ["vertex_1", "vertex_2", "edge_0_1", "edge_0_2"]
+          },
+          "quiz": {
+            "question": "Why does BFS use a queue instead of a stack?",
+            "options": ["Queues are faster", "FIFO ensures level-by-level processing", "Stacks use more memory", "No particular reason"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 2,
+          "commentary": "**Level 1 complete!** Vertices 1, 2 discovered. Now dequeue 1. Neighbors of 1: 3, 4. Add 3, 4 to queue.",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "queue": [2, 3, 4],
+              "visited": [0, 1, 2, 3, 4],
+              "current": 1,
+              "level": 1
+            },
+            "highlights": ["vertex_3", "vertex_4", "edge_1_3", "edge_1_4"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 3,
+          "commentary": "**Dequeue vertex 2**. Neighbor 4 already visited, skip. Queue: [3, 4].",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "queue": [3, 4],
+              "visited": [0, 1, 2, 3, 4],
+              "current": 2,
+              "skipped": [4]
+            },
+            "highlights": ["vertex_2"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 4,
+          "commentary": "**Level 2 processing**. Dequeue 3. Neighbor 5 not visited, add to queue. Queue: [4, 5].",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "queue": [4, 5],
+              "visited": [0, 1, 2, 3, 4, 5],
+              "current": 3,
+              "level": 2
+            },
+            "highlights": ["vertex_5", "edge_3_5"]
+          },
+          "quiz": {
+            "question": "In BFS, what's the distance from source to vertex 5?",
+            "options": ["1", "2", "3", "4"],
+            "correct": 2
+          }
+        },
+        {
+          "step_id": 5,
+          "commentary": "**Dequeue 4**. Neighbor 5 already visited. Dequeue 5, no unvisited neighbors. Queue empty - **BFS Complete!**",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "queue": [],
+              "visited": [0, 1, 2, 3, 4, 5],
+              "traversal_order": [0, 1, 2, 3, 4, 5]
+            },
+            "highlights": ["vertex_0", "vertex_1", "vertex_2", "vertex_3", "vertex_4", "vertex_5"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 6,
+          "commentary": "**BFS Result**: Traversal order `[0, 1, 2, 3, 4, 5]`. Discovered shortest paths from 0: Level 0: {0}, Level 1: {1,2}, Level 2: {3,4}, Level 3: {5}.",
+          "state": {
+            "visual_type": "graph",
+            "data": {
+              "vertices": [0, 1, 2, 3, 4, 5],
+              "edges": [[0,1], [0,2], [1,3], [1,4], [2,4], [3,5], [4,5]],
+              "levels": {
+                "0": [0],
+                "1": [1, 2],
+                "2": [3, 4],
+                "3": [5]
+              },
+              "shortest_paths": {
+                "0": 0, "1": 1, "2": 1, "3": 2, "4": 2, "5": 3
+              }
+            },
+            "highlights": []
+          },
+          "quiz": {
+            "question": "Which problem can BFS solve that DFS cannot efficiently solve?",
+            "options": ["Cycle detection", "Shortest path in unweighted graph", "Topological sort", "Connected components"],
+            "correct": 1
+          }
+        }
+      ]
+    }
+  },
+  "quiz_bank": [
+    {
+      "question": "What data structure does BFS use?",
+      "options": ["Stack", "Queue", "Heap", "Tree"],
+      "correct": 1
+    },
+    {
+      "question": "BFS finds shortest path in which type of graph?",
+      "options": ["Weighted graph", "Unweighted graph", "Directed acyclic graph", "Complete graph"],
+      "correct": 1
+    }
+  ]
+}

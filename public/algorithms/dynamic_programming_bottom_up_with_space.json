@@ -1,0 +1,289 @@
+{
+  "algorithm_id": "dynamic_programming_bottom_up_with_space",
+  "name": "Dynamic Programming (Bottom-Up with Space Optimization)",
+  "display_name": "Dynamic Programming (Bottom-Up with Space Optimization)",
+  "category": "Dynamic Programming",
+  "tags": [
+    "optimization",
+    "space-efficient",
+    "bottom-up",
+    "recursion-replacement"
+  ],
+  "overview": {
+    "core_idea": "Dynamic Programming (Bottom-Up with Space Optimization) solves problems by breaking them into smaller overlapping subproblems, computing results iteratively from the smallest subproblem to the largest, and reducing space usage by only storing the necessary states at each step. This approach avoids recursion and minimizes memory usage.",
+    "when_to_use": [
+      "When the problem exhibits overlapping subproblems and optimal substructure",
+      "When recursion leads to excessive memory usage or stack overflow",
+      "When the problem can be solved iteratively using a reduced state representation",
+      "When space efficiency is critical, such as in large-scale computations"
+    ],
+    "real_world_analogy": "Imagine climbing a staircase where you only need to remember the last two steps to calculate the next step. Instead of writing down every step you've taken, you only keep track of the immediate past, saving space while still knowing how to proceed."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize base cases",
+        "description": "Start by defining the smallest subproblems and their solutions. These are the foundation for solving larger subproblems.",
+        "array": [
+          1,
+          2
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Iteratively compute solutions",
+        "description": "Use the solutions of smaller subproblems to compute larger ones, updating only the necessary variables to save space.",
+        "array": [
+          1,
+          2,
+          3,
+          5,
+          8
+        ],
+        "highlight": "process"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function solveProblem(input):\n    // Line 1: Initialize base cases\n    prev = base_case_1\n    curr = base_case_2\n    \n    // Line 2: Iteratively compute results\n    for i from 3 to input:\n        next = compute(prev, curr)\n        prev = curr\n        curr = next\n    \n    return curr",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Initialize the base cases required for the problem"
+      },
+      {
+        "line": 2,
+        "text": "Set up variables to track the last two states"
+      },
+      {
+        "line": 5,
+        "text": "Iterate through the input, solving subproblems iteratively"
+      },
+      {
+        "line": 6,
+        "text": "Compute the next state using the previous two states"
+      },
+      {
+        "line": 8,
+        "text": "Return the final result after processing all subproblems"
+      }
+    ],
+    "variables": [
+      {
+        "name": "prev",
+        "description": "Stores the solution to the previous subproblem"
+      },
+      {
+        "name": "curr",
+        "description": "Stores the solution to the current subproblem"
+      },
+      {
+        "name": "next",
+        "description": "Temporarily holds the computed solution for the next subproblem"
+      }
+    ],
+    "key_operations": [
+      "Initialize base cases",
+      "Iterate through the input",
+      "Compute the next state using previous states",
+      "Update variables to reflect the current state"
+    ],
+    "return_values": [
+      {
+        "value": "curr",
+        "condition": "When the computation completes successfully"
+      },
+      {
+        "value": "-1 or null",
+        "condition": "If the input is invalid or computation fails"
+      }
+    ],
+    "flow_steps": [
+      "Initialize base cases",
+      "Iterate through subproblems",
+      "Compute next state",
+      "Update variables",
+      "Return final result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "The algorithm processes each subproblem exactly once, iterating through the input linearly. Each computation step takes constant time, resulting in a time complexity of O(n).",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(1)",
+      "explanation": "The algorithm only stores a constant number of variables (e.g., 'prev', 'curr', 'next'), regardless of the input size, making the space complexity O(1)."
+    }
+  },
+  "variations": [
+    {
+      "name": "Standard Bottom-Up DP",
+      "description": "Uses a full DP table to store all intermediate results.",
+      "use_case": "When space optimization is not critical or when intermediate results are needed.",
+      "example": {
+        "input": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          5,
+          8
+        ]
+      },
+      "key_change": "Store all intermediate results in a DP array instead of overwriting variables."
+    },
+    {
+      "name": "Recursive DP with Memoization",
+      "description": "Uses recursion with a memoization table to store intermediate results.",
+      "use_case": "When recursion is preferred or when the problem is naturally recursive.",
+      "example": {
+        "input": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "output": [
+          1,
+          2,
+          3,
+          5,
+          8
+        ]
+      },
+      "key_change": "Replace iterative computation with recursive calls and memoization."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to update variables",
+      "problem": "Failing to update 'prev' and 'curr' leads to incorrect results.",
+      "bad_code": "// Incorrect\nprev = curr;\ncurr = compute(prev, curr);",
+      "good_code": "// Correct\nnext = compute(prev, curr);\nprev = curr;\ncurr = next;",
+      "explanation": "The bad code overwrites 'prev' before using it, causing incorrect computations. The fix ensures 'prev' is updated only after 'next' is computed."
+    },
+    {
+      "title": "Pitfall 2: Misinterpreting base cases",
+      "problem": "Incorrectly initializing base cases leads to wrong results.",
+      "bad_code": "prev = 0; curr = 0;",
+      "good_code": "prev = base_case_1; curr = base_case_2;",
+      "explanation": "Base cases must match the problem's requirements. Using arbitrary values like 0 can produce invalid results."
+    },
+    {
+      "title": "Pitfall 3: Handling large inputs",
+      "problem": "Using a DP table for large inputs can cause memory issues.",
+      "bad_code": "dp = new Array(n);",
+      "good_code": "Use space-optimized variables instead of a DP table.",
+      "explanation": "Large DP tables consume excessive memory. Space optimization avoids this by storing only necessary states."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Fibonacci Sequence with Space Optimization",
+    "description": "Calculate the nth Fibonacci number using the space-optimized bottom-up approach.",
+    "array": [
+      1,
+      1,
+      2,
+      3,
+      5,
+      8,
+      13
+    ],
+    "target": "Find the 7th Fibonacci number",
+    "steps": [
+      {
+        "question": "What are the base cases for Fibonacci?",
+        "hint": "Think about the first two numbers in the sequence.",
+        "options": [
+          "0 and 1",
+          "1 and 1",
+          "1 and 2",
+          "2 and 3"
+        ],
+        "correct": 1,
+        "explanation": "The Fibonacci sequence starts with 1 and 1 as the base cases."
+      },
+      {
+        "question": "What variables should you track during computation?",
+        "hint": "You only need to remember the last two numbers.",
+        "options": [
+          "prev and curr",
+          "prev, curr, and next",
+          "All numbers in the sequence",
+          "None"
+        ],
+        "correct": 0,
+        "explanation": "Tracking 'prev' and 'curr' is sufficient for space optimization."
+      },
+      {
+        "question": "What is the 7th Fibonacci number?",
+        "hint": "Iteratively compute using the previous two numbers.",
+        "options": [
+          "8",
+          "13",
+          "21",
+          "34"
+        ],
+        "correct": 1,
+        "explanation": "The 7th Fibonacci number is 13, computed iteratively."
+      },
+      {
+        "question": "Why is this approach space-efficient?",
+        "hint": "Consider how many variables are stored.",
+        "options": [
+          "It uses a DP table",
+          "It stores only two variables",
+          "It uses recursion",
+          "It stores all intermediate results"
+        ],
+        "correct": 1,
+        "explanation": "Only two variables are stored, making the approach space-efficient."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Use this approach for problems with linear dependencies between subproblems.",
+    "Always verify base cases before starting the iteration.",
+    "Recognize problems where intermediate results are unnecessary for space optimization.",
+    "Debug by printing 'prev' and 'curr' values at each step.",
+    "Practice converting recursive solutions to iterative ones for better space efficiency."
+  ],
+  "related_problems": [
+    "Climbing Stairs (LeetCode 70)",
+    "Fibonacci Number (LeetCode 509)",
+    "House Robber (LeetCode 198)",
+    "Maximum Subarray (LeetCode 53)",
+    "Min Cost Climbing Stairs (LeetCode 746)"
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "algorithm_id": "dynamic_programming_with_dfs",
+  "name": "Dynamic Programming with DFS",
+  "display_name": "Dynamic Programming with DFS",
+  "category": "Dynamic Programming",
+  "tags": [
+    "Dynamic Programming",
+    "DFS",
+    "Memoization",
+    "Graph Traversal"
+  ],
+  "overview": {
+    "core_idea": "Dynamic Programming with DFS combines depth-first search (DFS) with memoization to solve problems efficiently by breaking them into overlapping subproblems. It avoids redundant computations by storing the results of already-solved subproblems.",
+    "when_to_use": [
+      "When the problem can be broken into overlapping subproblems",
+      "When the problem involves traversing a graph or tree structure",
+      "When you need to optimize recursive solutions to avoid recomputation",
+      "When the problem has a clear top-down structure"
+    ],
+    "real_world_analogy": "Imagine you are exploring a maze with many paths, and you want to find the shortest path to the exit. If you\u2019ve already explored a path and know it leads to a dead end, you write it down in a notebook so you don\u2019t waste time exploring it again. This is similar to how DFS with memoization avoids redundant computations."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize the memoization table",
+        "description": "Before starting the DFS, create a table (or dictionary) to store the results of subproblems. This will help avoid redundant calculations.",
+        "array": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Start DFS from the root or initial state",
+        "description": "Begin the depth-first search from the starting point, exploring each possible path recursively.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Check memoization table",
+        "description": "Before solving a subproblem, check if its result is already stored in the memoization table. If yes, return the stored result.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5
+        ],
+        "highlight": "memo-check"
+      },
+      {
+        "title": "Step 4: Solve the subproblem",
+        "description": "If the result is not in the memoization table, compute it recursively by exploring all possible paths.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5
+        ],
+        "highlight": "solve"
+      },
+      {
+        "title": "Step 5: Store the result in the memoization table",
+        "description": "After solving the subproblem, store its result in the memoization table for future reference.",
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5
+        ],
+        "highlight": "store"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function dpWithDFS(node):\n    // Line 1: Check if the result is already computed\n    if memo[node] is not null:\n        return memo[node]\n    \n    // Line 2: Base case\n    if node is a leaf or base condition:\n        return base_value\n    \n    // Line 3: Recursive case\n    result = compute_result_by_exploring_neighbors(node)\n    \n    // Line 4: Store the result in the memoization table\n    memo[node] = result\n    \n    return result",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Check if the result for the current node is already computed to avoid redundant calculations."
+      },
+      {
+        "line": 2,
+        "text": "Handle the base case where no further recursion is needed."
+      },
+      {
+        "line": 5,
+        "text": "Explore neighbors or subproblems recursively to compute the result."
+      },
+      {
+        "line": 8,
+        "text": "Store the computed result in the memoization table for future use."
+      },
+      {
+        "line": 10,
+        "text": "Return the computed or memoized result."
+      }
+    ],
+    "variables": [
+      {
+        "name": "node",
+        "description": "The current state or node being processed."
+      },
+      {
+        "name": "memo",
+        "description": "A table or dictionary to store results of subproblems."
+      }
+    ],
+    "key_operations": [
+      "Checking the memoization table for precomputed results",
+      "Recursive exploration of neighbors or subproblems",
+      "Storing results in the memoization table"
+    ],
+    "return_values": [
+      {
+        "value": "result",
+        "condition": "When the computation is successful."
+      },
+      {
+        "value": "null or -1",
+        "condition": "When the input is invalid or no solution exists."
+      }
+    ],
+    "flow_steps": [
+      "Initialize memoization table",
+      "Start DFS from the initial state",
+      "Check memoization table for precomputed results",
+      "Recursively solve subproblems",
+      "Store results in the memoization table",
+      "Return the final result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(V + E)",
+      "average": "O(V + E)",
+      "worst": "O(V + E)",
+      "explanation": "The algorithm visits each node and edge at most once, thanks to memoization. This ensures that the time complexity is linear with respect to the number of nodes (V) and edges (E).",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(V)",
+      "explanation": "The space complexity is determined by the memoization table, which stores results for each node."
+    }
+  },
+  "variations": [
+    {
+      "name": "Top-Down DP with DFS",
+      "description": "A variation where the problem is solved recursively from the top (initial state) down to the base cases.",
+      "use_case": "When the problem has a natural top-down structure.",
+      "example": {
+        "input": "Graph with nodes and edges",
+        "output": "Optimal solution for the problem"
+      },
+      "key_change": "Use recursion to explore from the root to the leaves."
+    },
+    {
+      "name": "Bottom-Up DP",
+      "description": "A variation where the problem is solved iteratively from the base cases up to the final state.",
+      "use_case": "When the problem can be solved iteratively without recursion.",
+      "example": {
+        "input": "Graph with nodes and edges",
+        "output": "Optimal solution for the problem"
+      },
+      "key_change": "Use iteration instead of recursion."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to check the memoization table",
+      "problem": "The algorithm recomputes results for the same subproblem multiple times.",
+      "bad_code": "// The incorrect way\nfunction dfs(node):\n    result = compute_result(node)\n    return result",
+      "good_code": "// The correct way\nfunction dfs(node):\n    if memo[node] is not null:\n        return memo[node]\n    result = compute_result(node)\n    memo[node] = result\n    return result",
+      "explanation": "Without checking the memoization table, the algorithm performs redundant computations, increasing time complexity."
+    },
+    {
+      "title": "Pitfall 2: Incorrect base case",
+      "problem": "The algorithm fails to terminate or returns incorrect results.",
+      "bad_code": "if node == null: return 0",
+      "good_code": "if node is a leaf: return base_value",
+      "explanation": "Defining the wrong base case can lead to infinite recursion or incorrect results."
+    },
+    {
+      "title": "Pitfall 3: Not storing results in the memoization table",
+      "problem": "The algorithm does not save computed results, leading to inefficiency.",
+      "bad_code": "result = compute_result(node)\nreturn result",
+      "good_code": "result = compute_result(node)\nmemo[node] = result\nreturn result",
+      "explanation": "Storing results ensures that subproblems are not recomputed."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Solve a Maze with DP and DFS",
+    "description": "Walk through the algorithm step by step to find the shortest path in a maze.",
+    "array": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ],
+    "target": "Find the shortest path",
+    "steps": [
+      {
+        "question": "What is the first step in the algorithm?",
+        "hint": "Think about initialization.",
+        "options": [
+          "Initialize memo table",
+          "Start DFS",
+          "Check base case",
+          "Compute result"
+        ],
+        "correct": 0,
+        "explanation": "The first step is to initialize the memoization table to store results."
+      },
+      {
+        "question": "What happens when a subproblem is already solved?",
+        "hint": "Check the memo table.",
+        "options": [
+          "Recompute it",
+          "Return the stored result",
+          "Ignore it",
+          "Start over"
+        ],
+        "correct": 1,
+        "explanation": "If a subproblem is already solved, the stored result is returned."
+      },
+      {
+        "question": "What is the purpose of the base case?",
+        "hint": "Think about recursion termination.",
+        "options": [
+          "To stop recursion",
+          "To skip nodes",
+          "To store results",
+          "To initialize variables"
+        ],
+        "correct": 0,
+        "explanation": "The base case stops recursion when a leaf node or base condition is reached."
+      },
+      {
+        "question": "What is the final step in the algorithm?",
+        "hint": "Think about returning results.",
+        "options": [
+          "Store results",
+          "Return results",
+          "Recompute results",
+          "Ignore results"
+        ],
+        "correct": 1,
+        "explanation": "The final step is to return the computed or memoized result."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Always define a clear base case to avoid infinite recursion.",
+    "Use a dictionary for memoization when the state space is sparse.",
+    "Visualize the problem as a graph or tree to identify subproblems.",
+    "Test the algorithm on edge cases to ensure correctness.",
+    "Combine with pruning techniques to further optimize performance."
+  ],
+  "related_problems": [
+    "Longest Increasing Path in a Matrix (LeetCode 329)",
+    "Word Break (LeetCode 139)",
+    "House Robber III (LeetCode 337)",
+    "Unique Paths III (LeetCode 980)",
+    "Minimum Path Sum (LeetCode 64)"
+  ]
+}

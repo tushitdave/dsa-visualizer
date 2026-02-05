@@ -34,7 +34,35 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Environment files
+# Environment files (SECURITY: Never commit secrets)
 .env
+.env.*
 .env.local
+.env.production
+.env.development
 backend/.env
+backend/.env.*
+
+# Database files (SECURITY: Contains encrypted credentials)
+backend/data/
+backend/data/*.db
+backend/data/sessions.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache files
+backend/cache/
+backend/cache_data/
+*.cache
+
+# Credentials and secrets
+**/credentials.json
+**/secrets.json
+**/*.pem
+**/*.key
+
+# Temporary files
+*.tmp
+*.temp
+.scratchpad/

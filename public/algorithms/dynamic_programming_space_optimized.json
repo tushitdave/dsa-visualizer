@@ -1,0 +1,263 @@
+{
+  "algorithm_id": "dynamic_programming_space_optimized",
+  "name": "Dynamic Programming (Space-Optimized)",
+  "display_name": "Dynamic Programming (Space-Optimized)",
+  "category": "Dynamic Programming",
+  "tags": [
+    "optimization",
+    "space complexity",
+    "recursion",
+    "bottom-up"
+  ],
+  "overview": {
+    "core_idea": "Dynamic Programming (Space-Optimized) reduces the space complexity of traditional DP solutions by only keeping track of the necessary state from previous computations. Instead of storing an entire DP table, it uses a small, fixed number of variables or arrays to achieve the same result.",
+    "when_to_use": [
+      "When the problem can be solved using a bottom-up DP approach",
+      "When the state transition depends only on a fixed number of previous states",
+      "When memory usage is a concern, such as in embedded systems or large-scale computations",
+      "When optimizing for both time and space efficiency is critical"
+    ],
+    "real_world_analogy": "Imagine climbing a staircase where you only need to remember the last two steps you took to figure out the next step. Instead of writing down every step you've taken so far, you just keep track of the last two and update them as you go."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize variables",
+        "description": "Start by initializing variables to store the minimum required state. For example, in a Fibonacci sequence, you only need the last two numbers.",
+        "array": [
+          0,
+          1
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Iterate and update state",
+        "description": "Iterate through the input or range, updating the state variables based on the recurrence relation. Discard older states as they are no longer needed.",
+        "array": [
+          1,
+          2,
+          3,
+          5,
+          8,
+          13
+        ],
+        "highlight": "process"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function fibonacci(n):\n    // Line 1: Handle base cases\n    if n == 0: return 0\n    if n == 1: return 1\n\n    // Line 2: Initialize variables for the last two states\n    prev1 = 0\n    prev2 = 1\n\n    // Line 3: Iterate through the range\n    for i from 2 to n:\n        current = prev1 + prev2\n        prev1 = prev2\n        prev2 = current\n\n    // Line 4: Return the result\n    return prev2",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Check for base cases (e.g., n = 0 or n = 1)"
+      },
+      {
+        "line": 5,
+        "text": "Initialize variables to store the last two Fibonacci numbers"
+      },
+      {
+        "line": 8,
+        "text": "Iterate through the range to compute the Fibonacci sequence"
+      },
+      {
+        "line": 9,
+        "text": "Update the current Fibonacci number"
+      },
+      {
+        "line": 10,
+        "text": "Shift the state variables to prepare for the next iteration"
+      },
+      {
+        "line": 13,
+        "text": "Return the final computed Fibonacci number"
+      }
+    ],
+    "variables": [
+      {
+        "name": "prev1",
+        "description": "Stores the second-to-last state"
+      },
+      {
+        "name": "prev2",
+        "description": "Stores the last state"
+      },
+      {
+        "name": "current",
+        "description": "Stores the current state during computation"
+      }
+    ],
+    "key_operations": [
+      "Initialize base cases",
+      "Iterate through the range",
+      "Update state variables based on the recurrence relation"
+    ],
+    "return_values": [
+      {
+        "value": "prev2",
+        "condition": "When the computation is complete"
+      },
+      {
+        "value": "0 or 1",
+        "condition": "For base cases n = 0 or n = 1"
+      }
+    ],
+    "flow_steps": [
+      "Check base cases",
+      "Initialize state variables",
+      "Iterate through the range",
+      "Update state variables",
+      "Return the result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "The algorithm iterates through the input or range exactly once, performing a constant amount of work per iteration. This results in a linear time complexity.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 10,
+          "bruteforce": 100
+        },
+        {
+          "n": 100,
+          "optimized": 100,
+          "bruteforce": 10000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 10000,
+          "optimized": 10000,
+          "bruteforce": 100000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(1)",
+      "explanation": "The algorithm uses a fixed number of variables to store the state, regardless of the input size. This eliminates the need for additional memory to store a DP table."
+    }
+  },
+  "variations": [
+    {
+      "name": "Knapsack Problem (Space-Optimized)",
+      "description": "Instead of using a 2D DP table, use a single 1D array to store only the current and previous states.",
+      "use_case": "When solving the 0/1 Knapsack problem with limited memory",
+      "example": {
+        "input": "weights = [1, 3, 4], values = [15, 20, 30], capacity = 4",
+        "output": "35"
+      },
+      "key_change": "Replace the 2D table with a single array and update it iteratively."
+    },
+    {
+      "name": "Longest Common Subsequence (Space-Optimized)",
+      "description": "Use two 1D arrays to store the current and previous rows of the DP table.",
+      "use_case": "When solving LCS with large input strings",
+      "example": {
+        "input": "str1 = 'abcde', str2 = 'ace'",
+        "output": "3"
+      },
+      "key_change": "Reduce the 2D table to two 1D arrays and update them alternately."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Forgetting to update state variables",
+      "problem": "Failing to correctly update the state variables can lead to incorrect results.",
+      "bad_code": "// Incorrect state update\nprev1 = prev2\nprev2 = prev2 + prev1",
+      "good_code": "// Correct state update\ncurrent = prev1 + prev2\nprev1 = prev2\nprev2 = current",
+      "explanation": "The bad code incorrectly reuses the updated value of prev2, leading to incorrect results."
+    },
+    {
+      "title": "Pitfall 2: Misinterpreting the recurrence relation",
+      "problem": "Using the wrong recurrence relation can lead to incorrect results.",
+      "bad_code": "current = prev1 * prev2",
+      "good_code": "current = prev1 + prev2",
+      "explanation": "The recurrence relation for Fibonacci is addition, not multiplication."
+    },
+    {
+      "title": "Pitfall 3: Handling edge cases incorrectly",
+      "problem": "Failing to handle base cases like n = 0 or n = 1.",
+      "bad_code": "if n == 0: return 1",
+      "good_code": "if n == 0: return 0",
+      "explanation": "The Fibonacci sequence starts with 0, not 1, for n = 0."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Fibonacci Sequence (Space-Optimized)",
+    "description": "Walk through the algorithm step by step to compute the 7th Fibonacci number.",
+    "array": [],
+    "target": "Compute the 7th Fibonacci number",
+    "steps": [
+      {
+        "question": "What are the initial values of prev1 and prev2?",
+        "hint": "Think about the base cases of the Fibonacci sequence.",
+        "options": [
+          "0 and 1",
+          "1 and 1",
+          "0 and 0",
+          "1 and 0"
+        ],
+        "correct": 0,
+        "explanation": "The Fibonacci sequence starts with 0 and 1."
+      },
+      {
+        "question": "What is the value of current after the first iteration?",
+        "hint": "Use the recurrence relation: current = prev1 + prev2.",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "0"
+        ],
+        "correct": 0,
+        "explanation": "After the first iteration, current = 0 + 1 = 1."
+      },
+      {
+        "question": "What is the value of prev2 after the third iteration?",
+        "hint": "Track the updates to prev1 and prev2.",
+        "options": [
+          "2",
+          "3",
+          "5",
+          "8"
+        ],
+        "correct": 1,
+        "explanation": "After three iterations, prev2 holds the 3rd Fibonacci number, which is 3."
+      },
+      {
+        "question": "What is the 7th Fibonacci number?",
+        "hint": "Continue the iteration until n = 7.",
+        "options": [
+          "8",
+          "13",
+          "21",
+          "34"
+        ],
+        "correct": 1,
+        "explanation": "The 7th Fibonacci number is 13."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Use space-optimized DP when the state depends on a fixed number of previous states.",
+    "Identify the recurrence relation before optimizing the space complexity.",
+    "Test your implementation with edge cases like n = 0 or n = 1.",
+    "Use descriptive variable names to avoid confusion during updates.",
+    "Understand the trade-offs between time and space optimization."
+  ],
+  "related_problems": [
+    "Climbing Stairs (LeetCode 70)",
+    "House Robber (LeetCode 198)",
+    "Fibonacci Number (LeetCode 509)",
+    "Longest Common Subsequence (LeetCode 1143)",
+    "0/1 Knapsack Problem"
+  ]
+}

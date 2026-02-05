@@ -323,6 +323,64 @@ Return ONLY the JSON object, no markdown code blocks or extra text."""
         raise
 
 
+async def get_algorithm_explanation_with_provider(llm_provider, algorithm_name: str, problem_context: str = "") -> dict:
+    """
+    Get algorithm explanation using provided LLM provider.
+
+    Args:
+        llm_provider: LLM provider instance (from Pipeline)
+        algorithm_name: Name of the algorithm
+        problem_context: Optional problem to make examples relevant
+
+    Returns:
+        Algorithm explanation data
+    """
+    algorithm_id = normalize_algorithm_id(algorithm_name)
+
+    # Check cache first
+    cached = load_cached_algorithm(algorithm_id)
+    if cached:
+        logger.info(f"Using cached algorithm data for: {algorithm_name}")
+        return cached
+
+    logger.info(f"Generating algorithm explanation via LLM for: {algorithm_name}")
+
+    # Build prompt (simplified version)
+    prompt = f"""Generate a comprehensive educational explanation for the algorithm: "{algorithm_name}"
+
+{"PROBLEM CONTEXT: " + problem_context if problem_context else ""}
+
+Return a valid JSON object with: algorithm_id, name, category, tags, overview (core_idea, when_to_use, real_world_analogy),
+visual_explanation (steps with array examples), pseudocode (code, annotations, variables),
+complexity (time with best/average/worst, space), variations, common_pitfalls, practice_exercise, pro_tips, related_problems.
+
+Be educational and use concrete examples."""
+
+    try:
+        system_instruction = "You are an expert computer science educator specializing in algorithms."
+        response = await llm_provider.call(prompt, system_instruction=system_instruction, json_mode=True)
+
+        cleaned = response.strip()
+        if cleaned.startswith('```json'):
+            cleaned = cleaned[7:]
+        if cleaned.startswith('```'):
+            cleaned = cleaned[3:]
+        if cleaned.endswith('```'):
+            cleaned = cleaned[:-3]
+        cleaned = cleaned.strip()
+
+        algorithm_data = json.loads(cleaned)
+        algorithm_data['algorithm_id'] = algorithm_id
+
+        save_to_cache(algorithm_id, algorithm_data)
+        logger.info(f"Generated algorithm explanation for: {algorithm_name}")
+        return algorithm_data
+
+    except Exception as e:
+        logger.error(f"Error generating algorithm explanation: {e}")
+        raise
+
+
 async def get_algorithm_explanation(algorithm_name: str, problem_context: str = "") -> dict:
     """
     Main entry point - get algorithm explanation from cache or generate.

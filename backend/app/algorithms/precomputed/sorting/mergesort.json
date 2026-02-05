@@ -1,0 +1,173 @@
+{
+  "algorithm_id": "mergesort",
+  "algorithm_name": "MergeSort",
+  "category": "sorting",
+  "complexity": {
+    "time": {
+      "best": "O(n log n)",
+      "average": "O(n log n)",
+      "worst": "O(n log n)",
+      "explanation": "Consistent O(n log n) regardless of input. Always divides in half (log n levels) and merges all elements at each level (n work)."
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "Requires auxiliary array for merging. Not in-place unlike QuickSort."
+    }
+  },
+  "strategy": "Divide and Conquer with Merging",
+  "strategy_details": "MergeSort divides the array into two halves, recursively sorts each half, then merges the sorted halves. The merge step is key - it combines two sorted arrays into one sorted array in O(n) time.",
+  "templates": {
+    "small_8": {
+      "sample_input": [38, 27, 43, 3, 9, 82, 10, 45],
+      "frames": [
+        {
+          "step_id": 0,
+          "commentary": "**MergeSort** starting with array `[38, 27, 43, 3, 9, 82, 10, 45]`. Will divide until single elements, then merge back.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [38, 27, 43, 3, 9, 82, 10, 45],
+              "level": 0
+            },
+            "highlights": []
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 1,
+          "commentary": "**Divide**: Split into `[38, 27, 43, 3]` and `[9, 82, 10, 45]`. Each half will be sorted independently.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "left": [38, 27, 43, 3],
+              "right": [9, 82, 10, 45],
+              "level": 1
+            },
+            "highlights": ["left", "right"]
+          },
+          "quiz": {
+            "question": "How many times will we divide before reaching single elements?",
+            "options": ["2 times", "3 times (log₂(8))", "4 times", "8 times"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 2,
+          "commentary": "**Divide further**: Left becomes `[38, 27]` and `[43, 3]`. Right becomes `[9, 82]` and `[10, 45]`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "subarrays": [[38, 27], [43, 3], [9, 82], [10, 45]],
+              "level": 2
+            },
+            "highlights": []
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 3,
+          "commentary": "**Base case reached**: 8 single-element arrays. Each is trivially sorted. Now we **merge** back up!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "subarrays": [[38], [27], [43], [3], [9], [82], [10], [45]],
+              "level": 3,
+              "status": "ready_to_merge"
+            },
+            "highlights": []
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 4,
+          "commentary": "**Merge pairs**: [38,27]→[27,38], [43,3]→[3,43], [9,82]→[9,82], [10,45]→[10,45]. Compare and arrange!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "merged": [[27, 38], [3, 43], [9, 82], [10, 45]],
+              "level": 2
+            },
+            "highlights": ["merged"]
+          },
+          "quiz": {
+            "question": "What's the time complexity of merging two sorted arrays of size n/2 each?",
+            "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+            "correct": 2
+          }
+        },
+        {
+          "step_id": 5,
+          "commentary": "**Merge level 2**: [27,38]+[3,43]→[3,27,38,43]. Compare front elements, take smaller, repeat.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "merging": {
+                "left": [27, 38],
+                "right": [3, 43],
+                "result": [3, 27, 38, 43]
+              },
+              "steps": ["3<27, take 3", "27<43, take 27", "38<43, take 38", "take 43"]
+            },
+            "highlights": ["result"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 6,
+          "commentary": "**Merge level 2**: [9,82]+[10,45]→[9,10,45,82]. Two sorted halves now: [3,27,38,43] and [9,10,45,82].",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "left_sorted": [3, 27, 38, 43],
+              "right_sorted": [9, 10, 45, 82],
+              "level": 1
+            },
+            "highlights": ["left_sorted", "right_sorted"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 7,
+          "commentary": "**Final merge**: Combine [3,27,38,43] and [9,10,45,82] into fully sorted array.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "merging": {
+                "left": [3, 27, 38, 43],
+                "right": [9, 10, 45, 82],
+                "result": [3, 9, 10, 27, 38, 43, 45, 82]
+              }
+            },
+            "highlights": ["result"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 8,
+          "commentary": "**MergeSort Complete!** Result: `[3, 9, 10, 27, 38, 43, 45, 82]`. Always O(n log n) - stable and predictable!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [3, 9, 10, 27, 38, 43, 45, 82],
+              "sorted": true,
+              "comparisons": "O(n log n)"
+            },
+            "highlights": ["arr"]
+          },
+          "quiz": {
+            "question": "MergeSort is 'stable'. What does this mean?",
+            "options": ["It never crashes", "Equal elements maintain original order", "It uses constant space", "It's always faster than QuickSort"],
+            "correct": 1
+          }
+        }
+      ]
+    }
+  },
+  "quiz_bank": [
+    {
+      "question": "Why is MergeSort preferred for linked lists?",
+      "options": ["It's faster", "Merge operation doesn't need random access", "It uses less memory", "Linked lists are always sorted"],
+      "correct": 1
+    }
+  ]
+}

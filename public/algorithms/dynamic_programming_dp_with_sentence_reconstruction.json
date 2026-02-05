@@ -1,0 +1,308 @@
+{
+  "algorithm_id": "dynamic_programming_dp_with_sentence_reconstruction",
+  "name": "Dynamic Programming (DP) with Sentence Reconstruction",
+  "display_name": "Dynamic Programming (DP) with Sentence Reconstruction",
+  "category": "Dynamic Programming",
+  "tags": [
+    "dynamic programming",
+    "sentence reconstruction",
+    "string manipulation",
+    "optimization"
+  ],
+  "overview": {
+    "core_idea": "This algorithm determines whether a given string can be segmented into valid words from a dictionary and reconstructs the sentence if possible. It uses dynamic programming to efficiently solve the problem by breaking it into overlapping subproblems and reusing solutions to avoid redundant computations.",
+    "when_to_use": [
+      "When you need to check if a string can be segmented into valid words",
+      "When reconstructing the segmented sentence is required",
+      "When the dictionary of valid words is large and efficiency is important",
+      "When solving problems involving string segmentation or tokenization"
+    ],
+    "real_world_analogy": "Imagine you are trying to break a long password into meaningful words using a dictionary. You start from the beginning and check if the first few characters form a valid word. If they do, you move forward and repeat the process for the remaining characters, keeping track of your progress to avoid repeating work."
+  },
+  "visual_explanation": {
+    "steps": [
+      {
+        "title": "Step 1: Initialize DP Array",
+        "description": "Create a DP array where dp[i] is true if the substring s[0:i] can be segmented into valid words. Initialize dp[0] to true since an empty string is always valid.",
+        "array": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "highlight": "init"
+      },
+      {
+        "title": "Step 2: Iterate Over Substring Endings",
+        "description": "For each position i in the string, check all possible substrings ending at i. If a substring is valid and dp[start] is true, set dp[i] to true.",
+        "array": [
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true
+        ],
+        "highlight": "process"
+      },
+      {
+        "title": "Step 3: Reconstruct the Sentence",
+        "description": "Backtrack from the end of the string to reconstruct the sentence by identifying valid substrings that contributed to dp[n].",
+        "array": [
+          "apple",
+          "pen",
+          "apple"
+        ],
+        "highlight": "reconstruct"
+      }
+    ]
+  },
+  "pseudocode": {
+    "language": "generic",
+    "code": "function reconstructSentence(s, wordDict):\n    n = length(s)\n    dp = [false] * (n + 1)\n    dp[0] = true\n    backtrack = [-1] * (n + 1)\n\n    for i from 1 to n:\n        for j from 0 to i:\n            if dp[j] and s[j:i] in wordDict:\n                dp[i] = true\n                backtrack[i] = j\n                break\n\n    if not dp[n]:\n        return \"No valid reconstruction\"\n\n    result = []\n    index = n\n    while index > 0:\n        result.append(s[backtrack[index]:index])\n        index = backtrack[index]\n\n    return reverse(result)",
+    "annotations": [
+      {
+        "line": 1,
+        "text": "Define the function with inputs: string s and dictionary of words"
+      },
+      {
+        "line": 2,
+        "text": "Get the length of the input string"
+      },
+      {
+        "line": 3,
+        "text": "Initialize the DP array to track valid substrings"
+      },
+      {
+        "line": 4,
+        "text": "Base case: an empty string is always valid"
+      },
+      {
+        "line": 5,
+        "text": "Initialize a backtracking array to reconstruct the sentence"
+      },
+      {
+        "line": 7,
+        "text": "Iterate over all possible substring endings"
+      },
+      {
+        "line": 8,
+        "text": "Check all substrings ending at i"
+      },
+      {
+        "line": 9,
+        "text": "If substring is valid, mark dp[i] as true and record the start index"
+      },
+      {
+        "line": 13,
+        "text": "If the entire string cannot be segmented, return failure"
+      },
+      {
+        "line": 16,
+        "text": "Backtrack to reconstruct the sentence"
+      },
+      {
+        "line": 20,
+        "text": "Return the reconstructed sentence in the correct order"
+      }
+    ],
+    "variables": [
+      {
+        "name": "dp",
+        "description": "Boolean array indicating if substrings are valid"
+      },
+      {
+        "name": "backtrack",
+        "description": "Array to track the start indices of valid substrings"
+      },
+      {
+        "name": "result",
+        "description": "List to store the reconstructed sentence"
+      }
+    ],
+    "key_operations": [
+      "Check if a substring is in the dictionary",
+      "Update the DP array and backtrack array",
+      "Reconstruct the sentence using backtracking"
+    ],
+    "return_values": [
+      {
+        "value": "Reconstructed sentence",
+        "condition": "If the string can be segmented"
+      },
+      {
+        "value": "\"No valid reconstruction\"",
+        "condition": "If the string cannot be segmented"
+      }
+    ],
+    "flow_steps": [
+      "Initialize DP and backtrack arrays",
+      "Iterate over all substrings",
+      "Update DP and backtrack arrays based on valid substrings",
+      "Backtrack to reconstruct the sentence",
+      "Return the result"
+    ]
+  },
+  "complexity": {
+    "time": {
+      "best": "O(n^2)",
+      "average": "O(n^2)",
+      "worst": "O(n^2)",
+      "explanation": "The outer loop runs for n iterations, and the inner loop checks all substrings ending at each position, leading to a quadratic time complexity.",
+      "comparison_data": [
+        {
+          "n": 10,
+          "optimized": 100,
+          "bruteforce": 1000
+        },
+        {
+          "n": 100,
+          "optimized": 10000,
+          "bruteforce": 1000000
+        },
+        {
+          "n": 1000,
+          "optimized": 1000000,
+          "bruteforce": 1000000000
+        },
+        {
+          "n": 10000,
+          "optimized": 100000000,
+          "bruteforce": 1000000000000
+        }
+      ]
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "The DP and backtrack arrays each require O(n) space, where n is the length of the input string."
+    }
+  },
+  "variations": [
+    {
+      "name": "Word Break Problem",
+      "description": "Focuses only on determining if a string can be segmented without reconstructing the sentence.",
+      "use_case": "When reconstruction is not required, only validation.",
+      "example": {
+        "input": "applepenapple, [\"apple\", \"pen\"]",
+        "output": "true"
+      },
+      "key_change": "Remove the backtrack array and reconstruction logic."
+    },
+    {
+      "name": "All Possible Reconstructions",
+      "description": "Finds all possible ways to segment the string into valid words.",
+      "use_case": "When multiple reconstructions are needed.",
+      "example": {
+        "input": "pineapplepenapple, [\"pine\", \"apple\", \"pen\", \"pineapple\"]",
+        "output": "[\"pine apple pen apple\", \"pineapple pen apple\"]"
+      },
+      "key_change": "Use a list of lists to store all possible reconstructions at each position."
+    }
+  ],
+  "common_pitfalls": [
+    {
+      "title": "Pitfall 1: Missing Base Case",
+      "problem": "Failing to initialize dp[0] to true causes the algorithm to fail for valid inputs.",
+      "bad_code": "dp = [false] * (n + 1)",
+      "good_code": "dp = [false] * (n + 1)\ndp[0] = true",
+      "explanation": "The base case ensures that an empty string is considered valid, which is critical for the algorithm to work."
+    },
+    {
+      "title": "Pitfall 2: Ignoring Substring Bounds",
+      "problem": "Accessing substrings out of bounds leads to runtime errors.",
+      "bad_code": "if s[j:i] in wordDict:",
+      "good_code": "if j >= 0 and s[j:i] in wordDict:",
+      "explanation": "Always check the bounds of indices before accessing substrings."
+    },
+    {
+      "title": "Pitfall 3: Inefficient Dictionary Lookup",
+      "problem": "Using a list instead of a set for the dictionary increases lookup time.",
+      "bad_code": "if substring in wordList:",
+      "good_code": "if substring in wordSet:",
+      "explanation": "Using a set for the dictionary ensures O(1) average lookup time compared to O(n) for a list."
+    }
+  ],
+  "practice_exercise": {
+    "title": "Hands-on Practice: Sentence Reconstruction",
+    "description": "Walk through the algorithm step by step to reconstruct the sentence.",
+    "array": [
+      "pineapplepenapple"
+    ],
+    "target": [
+      "pine",
+      "apple",
+      "pen",
+      "pineapple"
+    ],
+    "steps": [
+      {
+        "question": "What is the value of dp[5] after processing the substring 'apple'?",
+        "hint": "Check if 'apple' is in the dictionary and if dp[0] is true.",
+        "options": [
+          "true",
+          "false",
+          "undefined",
+          "error"
+        ],
+        "correct": 0,
+        "explanation": "Since 'apple' is in the dictionary and dp[0] is true, dp[5] is set to true."
+      },
+      {
+        "question": "What is stored in backtrack[5]?",
+        "hint": "Backtrack stores the start index of the valid substring.",
+        "options": [
+          "0",
+          "1",
+          "2",
+          "3"
+        ],
+        "correct": 0,
+        "explanation": "The valid substring 'apple' starts at index 0."
+      },
+      {
+        "question": "What is the reconstructed sentence after processing the entire string?",
+        "hint": "Use the backtrack array to reconstruct the sentence.",
+        "options": [
+          "'pine apple pen apple'",
+          "'pineapple pen apple'",
+          "'pine pen apple'",
+          "'invalid'"
+        ],
+        "correct": 1,
+        "explanation": "The reconstructed sentence is 'pineapple pen apple' based on the backtrack array."
+      },
+      {
+        "question": "What is the time complexity of this algorithm?",
+        "hint": "Consider the nested loops and substring checks.",
+        "options": [
+          "O(n)",
+          "O(n^2)",
+          "O(n^3)",
+          "O(2^n)"
+        ],
+        "correct": 1,
+        "explanation": "The time complexity is O(n^2) due to the nested loops."
+      }
+    ]
+  },
+  "pro_tips": [
+    "Always use a set for the dictionary to optimize lookup time.",
+    "Visualize the DP array and backtrack array to debug issues.",
+    "Use this algorithm for problems involving string segmentation or tokenization.",
+    "Test edge cases like empty strings or strings with no valid segmentation.",
+    "Understand the relationship between DP and backtracking for reconstruction."
+  ],
+  "related_problems": [
+    "Word Break (LeetCode 139)",
+    "Word Break II (LeetCode 140)",
+    "Concatenated Words (LeetCode 472)",
+    "Palindrome Partitioning (LeetCode 131)",
+    "Restore IP Addresses (LeetCode 93)"
+  ]
+}

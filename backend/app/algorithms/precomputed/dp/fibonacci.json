@@ -1,0 +1,177 @@
+{
+  "algorithm_id": "fibonacci",
+  "algorithm_name": "Fibonacci Sequence",
+  "category": "dp",
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "With memoization/tabulation, each Fibonacci number computed exactly once. Without optimization, naive recursion is O(2^n)!"
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "Tabulation uses O(n) array. Can be optimized to O(1) by keeping only last two values."
+    }
+  },
+  "strategy": "Dynamic Programming with Tabulation",
+  "strategy_details": "Instead of naive recursion that recomputes values exponentially, we build the solution bottom-up. Store each Fibonacci number in a table, reusing previously computed values. F(n) = F(n-1) + F(n-2).",
+  "templates": {
+    "small_10": {
+      "sample_input": {"n": 10},
+      "frames": [
+        {
+          "step_id": 0,
+          "commentary": "**Fibonacci Sequence**: Compute F(10). Using tabulation (bottom-up DP). Initialize: F(0)=0, F(1)=1.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, null, null, null, null, null, null, null, null, null],
+              "computing": null,
+              "target": 10
+            },
+            "highlights": ["dp[0]", "dp[1]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 1,
+          "commentary": "**Computing F(2)**: F(2) = F(1) + F(0) = 1 + 0 = 1. Store in dp[2].",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, null, null, null, null, null, null, null, null],
+              "computing": 2,
+              "formula": "F(2) = F(1) + F(0) = 1 + 0 = 1"
+            },
+            "highlights": ["dp[2]"]
+          },
+          "quiz": {
+            "question": "Why is naive recursive Fibonacci O(2^n)?",
+            "options": ["It uses a binary tree", "Same subproblems computed multiple times", "It's not, it's O(n)", "Recursion is always exponential"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 2,
+          "commentary": "**Computing F(3)**: F(3) = F(2) + F(1) = 1 + 1 = 2. Notice we reuse F(2) from table!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, 2, null, null, null, null, null, null, null],
+              "computing": 3,
+              "formula": "F(3) = F(2) + F(1) = 1 + 1 = 2"
+            },
+            "highlights": ["dp[3]", "dp[2]", "dp[1]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 3,
+          "commentary": "**Computing F(4)**: F(4) = F(3) + F(2) = 2 + 1 = 3.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, 2, 3, null, null, null, null, null, null],
+              "computing": 4,
+              "formula": "F(4) = F(3) + F(2) = 2 + 1 = 3"
+            },
+            "highlights": ["dp[4]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 4,
+          "commentary": "**Computing F(5)**: F(5) = F(4) + F(3) = 3 + 2 = 5.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, 2, 3, 5, null, null, null, null, null],
+              "computing": 5,
+              "formula": "F(5) = F(4) + F(3) = 3 + 2 = 5"
+            },
+            "highlights": ["dp[5]"]
+          },
+          "quiz": {
+            "question": "What's the key insight of Dynamic Programming?",
+            "options": ["Use recursion", "Divide problem into subproblems", "Store and reuse subproblem solutions", "Always use arrays"],
+            "correct": 2
+          }
+        },
+        {
+          "step_id": 5,
+          "commentary": "**Computing F(6), F(7)**: F(6) = 8, F(7) = 13. Each computation is O(1) using stored values!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, 2, 3, 5, 8, 13, null, null, null],
+              "computing": 7
+            },
+            "highlights": ["dp[6]", "dp[7]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 6,
+          "commentary": "**Computing F(8), F(9)**: F(8) = 21, F(9) = 34. Almost there!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, null],
+              "computing": 9
+            },
+            "highlights": ["dp[8]", "dp[9]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 7,
+          "commentary": "**Final: F(10)** = F(9) + F(8) = 34 + 21 = **55**. Computed in O(n) time with O(n) space!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "dp": [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55],
+              "result": 55,
+              "total_operations": 10
+            },
+            "highlights": ["dp[10]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 8,
+          "commentary": "**Optimization**: We only need last 2 values! Can reduce space to O(1) by keeping just `prev1` and `prev2`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "comparison": {
+                "naive_recursion": {"time": "O(2^n)", "space": "O(n) stack"},
+                "tabulation": {"time": "O(n)", "space": "O(n)"},
+                "optimized": {"time": "O(n)", "space": "O(1)"}
+              },
+              "result": 55
+            },
+            "highlights": []
+          },
+          "quiz": {
+            "question": "For F(50), how many operations does naive recursion need vs DP?",
+            "options": ["Same, both O(n)", "Naive: ~10^15, DP: 50", "Naive: 50, DP: ~10^15", "Both around 2500"],
+            "correct": 1
+          }
+        }
+      ]
+    }
+  },
+  "quiz_bank": [
+    {
+      "question": "What are the two key properties for DP to be applicable?",
+      "options": ["Speed and memory", "Overlapping subproblems and optimal substructure", "Recursion and iteration", "Arrays and hash maps"],
+      "correct": 1
+    },
+    {
+      "question": "What's the difference between memoization and tabulation?",
+      "options": ["Same thing", "Memoization is top-down, tabulation is bottom-up", "Tabulation uses recursion", "Memoization is faster"],
+      "correct": 1
+    }
+  ]
+}

@@ -1,10 +1,25 @@
+# AlgoInsight Backend Dependencies
+# Pin versions for reproducible builds and security
 
-fastapi
-uvicorn
-pydantic
-python-dotenv
-google-genai
-spacy
-networkx
-matplotlib
-openai
+# Web Framework
+fastapi>=0.109.0,<1.0.0      # FastAPI with security fixes
+uvicorn>=0.27.0,<1.0.0       # ASGI server
+pydantic>=2.5.0,<3.0.0       # Data validation
+
+# Configuration
+python-dotenv>=1.0.0,<2.0.0  # Environment variable loading
+
+# LLM Providers
+google-genai>=0.4.0          # Google Gemini SDK
+openai>=1.12.0,<2.0.0        # OpenAI SDK (also used for Azure)
+
+# NLP & Visualization
+spacy>=3.7.0,<4.0.0          # NLP processing
+networkx>=3.2.0,<4.0.0       # Graph algorithms
+matplotlib>=3.8.0,<4.0.0     # Visualization
+
+# Security
+cryptography>=41.0.0,<43.0.0 # Encryption for credential storage
+
+# Note: Run `pip install --upgrade pip` before installing
+# Install with: pip install -r requirements.txt

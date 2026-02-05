@@ -1,0 +1,210 @@
+{
+  "algorithm_id": "quicksort",
+  "algorithm_name": "QuickSort",
+  "category": "sorting",
+  "complexity": {
+    "time": {
+      "best": "O(n log n)",
+      "average": "O(n log n)",
+      "worst": "O(n²)",
+      "explanation": "Best/Average when pivot divides array evenly. Worst case occurs with already sorted array and poor pivot selection."
+    },
+    "space": {
+      "complexity": "O(log n)",
+      "explanation": "Recursion stack depth. In-place sorting, no auxiliary array needed."
+    }
+  },
+  "strategy": "Divide and Conquer with Pivot Partitioning",
+  "strategy_details": "QuickSort works by selecting a 'pivot' element and partitioning the array around it. Elements smaller than pivot go left, larger go right. This process recursively sorts the subarrays until the entire array is sorted.",
+  "templates": {
+    "small_8": {
+      "sample_input": [64, 34, 25, 12, 22, 11, 90, 45],
+      "frames": [
+        {
+          "step_id": 0,
+          "commentary": "**Starting QuickSort** with array `[64, 34, 25, 12, 22, 11, 90, 45]`. We'll use the last element as pivot.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [64, 34, 25, 12, 22, 11, 90, 45],
+              "pivot": null,
+              "left": null,
+              "right": null
+            },
+            "highlights": []
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 1,
+          "commentary": "**Selecting pivot = 45** (last element). Now we'll partition: move elements < 45 to left, elements > 45 to right.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [64, 34, 25, 12, 22, 11, 90, 45],
+              "pivot": 45,
+              "i": -1,
+              "j": 0
+            },
+            "highlights": ["pivot"]
+          },
+          "quiz": {
+            "question": "Why do we choose the last element as pivot?",
+            "options": ["It's always the median", "Simple implementation, though not optimal", "It guarantees O(n log n)", "It minimizes comparisons"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 2,
+          "commentary": "**Partitioning**: Scanning array. 64 > 45, skip. 34 < 45, swap with position 0. Array becomes `[34, 64, 25, 12, 22, 11, 90, 45]`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [34, 64, 25, 12, 22, 11, 90, 45],
+              "pivot": 45,
+              "i": 0,
+              "partition_index": 0
+            },
+            "highlights": ["arr[0]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 3,
+          "commentary": "**Continuing partition**: 25 < 45, 12 < 45, 22 < 45, 11 < 45. These move to left side. 90 > 45, stays right.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [34, 25, 12, 22, 11, 64, 90, 45],
+              "pivot": 45,
+              "partition_index": 5
+            },
+            "highlights": ["arr[5]", "arr[6]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 4,
+          "commentary": "**Partition complete!** Pivot 45 swaps to position 5. Left subarray: `[34, 25, 12, 22, 11]`, Right subarray: `[90, 64]`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [34, 25, 12, 22, 11, 45, 90, 64],
+              "pivot": 45,
+              "pivot_index": 5,
+              "left_subarray": [34, 25, 12, 22, 11],
+              "right_subarray": [90, 64]
+            },
+            "highlights": ["pivot_index"]
+          },
+          "quiz": {
+            "question": "After partitioning, what can we say about the pivot's position?",
+            "options": ["It might move in future steps", "It's in its final sorted position", "It will be compared again", "Nothing specific"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 5,
+          "commentary": "**Recursing left subarray** `[34, 25, 12, 22, 11]`. Pivot = 11. Partitioning places 11 at index 0.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [11, 25, 12, 22, 34, 45, 90, 64],
+              "current_range": "0-4",
+              "pivot": 11
+            },
+            "highlights": ["arr[0]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 6,
+          "commentary": "**Recursing** on `[25, 12, 22, 34]`. Pivot = 34. After partition: `[25, 12, 22, 34]`. 34 is in place.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [11, 25, 12, 22, 34, 45, 90, 64],
+              "current_range": "1-4",
+              "pivot": 34
+            },
+            "highlights": ["arr[4]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 7,
+          "commentary": "**Recursing** on `[25, 12, 22]`. Pivot = 22. After partition: `[12, 22, 25]`. Elements falling into place!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [11, 12, 22, 25, 34, 45, 90, 64],
+              "current_range": "1-3"
+            },
+            "highlights": ["arr[1]", "arr[2]", "arr[3]"]
+          },
+          "quiz": {
+            "question": "What's the best case scenario for QuickSort's pivot selection?",
+            "options": ["Smallest element", "Largest element", "Median element", "Random element"],
+            "correct": 2
+          }
+        },
+        {
+          "step_id": 8,
+          "commentary": "**Left side complete!** `[11, 12, 22, 25, 34]` is now sorted. Moving to right subarray `[90, 64]`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [11, 12, 22, 25, 34, 45, 90, 64],
+              "sorted_portion": [11, 12, 22, 25, 34, 45],
+              "unsorted": [90, 64]
+            },
+            "highlights": ["arr[0]", "arr[1]", "arr[2]", "arr[3]", "arr[4]", "arr[5]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 9,
+          "commentary": "**Recursing right** `[90, 64]`. Pivot = 64. 90 > 64, so after partition: `[64, 90]`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [11, 12, 22, 25, 34, 45, 64, 90],
+              "current_range": "6-7"
+            },
+            "highlights": ["arr[6]", "arr[7]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 10,
+          "commentary": "**QuickSort Complete!** Final sorted array: `[11, 12, 22, 25, 34, 45, 64, 90]`. Total comparisons were efficient due to good pivot choices.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [11, 12, 22, 25, 34, 45, 64, 90],
+              "sorted": true
+            },
+            "highlights": ["arr[0]", "arr[1]", "arr[2]", "arr[3]", "arr[4]", "arr[5]", "arr[6]", "arr[7]"]
+          },
+          "quiz": {
+            "question": "Why is QuickSort often preferred over MergeSort in practice?",
+            "options": ["Better worst case", "In-place sorting (less memory)", "Stable sorting", "Simpler code"],
+            "correct": 1
+          }
+        }
+      ]
+    }
+  },
+  "quiz_bank": [
+    {
+      "question": "What is the space complexity of QuickSort?",
+      "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+      "correct": 1
+    },
+    {
+      "question": "When does QuickSort perform worst?",
+      "options": ["Random array", "Already sorted array with bad pivot", "Array with duplicates", "Reverse sorted array"],
+      "correct": 1
+    }
+  ]
+}

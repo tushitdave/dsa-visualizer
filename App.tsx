@@ -8,49 +8,46 @@ import LearningJourney from './components/LearningJourney';
 import AlgorithmDeepDive from './components/AlgorithmDeepDive';
 import ErrorBoundary from './components/ErrorBoundary';
 import { analyzeProblemWithBackend, learnProblemWithBackend } from './services/apiService';
-import { generateAlgorithmTrace, generateLearningPhases, MOCK_TRACE, DEMO_TRACE } from './services/geminiService';
-import { TraceData, ContextOption, ModelName } from './types';
-import { Loader2, AlertCircle, Database, MonitorPlay, Zap, Cloud, PlayCircle } from 'lucide-react';
+import { MOCK_TRACE, DEMO_TRACE } from './services/geminiService';
+import { TraceData, ContextOption, LLMConfig } from './types';
+import { Loader2, AlertCircle, Database, MonitorPlay, PlayCircle } from 'lucide-react';
 
 const App: React.FC = () => {
   const [trace, setTrace] = useState<TraceData>(MOCK_TRACE);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [analysisMode, setAnalysisMode] = useState<'idle' | 'backend' | 'cloud'>('idle');
+  const [analysisMode, setAnalysisMode] = useState<'idle' | 'backend'>('idle');
   const [error, setError] = useState<string | null>(null);
   const [quizSolved, setQuizSolved] = useState(false);
   const [backendActive, setBackendActive] = useState(false);
   const [wasPlayingBeforeQuiz, setWasPlayingBeforeQuiz] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<ModelName>('gemini-2.5-flash');
 
   const [learningPhases, setLearningPhases] = useState<any[]>([]);
   const [showLearningJourney, setShowLearningJourney] = useState(false);
   const [isLearningModeActive, setIsLearningModeActive] = useState(false);
   const [lastProblem, setLastProblem] = useState<string>('');
   const [lastContext, setLastContext] = useState<ContextOption[]>([]);
+  const [lastLLMConfig, setLastLLMConfig] = useState<LLMConfig | null>(null);
 
   const [showAlgorithmDeepDive, setShowAlgorithmDeepDive] = useState(false);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<string | null>(null);
 
-  // Track the mode we started with for the current operation
-  const [sessionBackendMode, setSessionBackendMode] = useState<boolean | null>(null);
+  // Current provider info for display
+  const [currentProvider, setCurrentProvider] = useState<string>('');
+  const [currentModel, setCurrentModel] = useState<string>('');
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const savedModel = localStorage.getItem('algo_insight_model') as ModelName;
-    if (savedModel) setSelectedModel(savedModel);
-
     const checkBackend = async () => {
-      // Don't check backend status while loading - it might be busy processing
       if (isLoading || showLearningJourney || showAlgorithmDeepDive) {
         return;
       }
 
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // Increased timeout
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
         const res = await fetch('http://localhost:8000/', {
           mode: 'cors',
           cache: 'no-cache',
@@ -64,20 +61,20 @@ const App: React.FC = () => {
     };
 
     checkBackend();
-    const interval = setInterval(checkBackend, 10000); // Reduced frequency
+    const interval = setInterval(checkBackend, 10000);
     return () => clearInterval(interval);
   }, [isLoading, showLearningJourney, showAlgorithmDeepDive]);
-
-  const handleModelChange = (model: ModelName) => {
-    setSelectedModel(model);
-    localStorage.setItem('algo_insight_model', model);
-  };
 
   const frames = trace?.frames || [];
   const activeFrame = frames.length > 0 ? (frames[currentStep] || frames[0]) : null;
   const isBlockedByQuiz = !!activeFrame?.quiz && !quizSolved;
 
-  const handleAnalyze = async (problem: string, context: ContextOption[], isLearningMode: boolean) => {
+  const handleAnalyze = async (problem: string, context: ContextOption[], isLearningMode: boolean, llmConfig: LLMConfig) => {
+    if (!backendActive) {
+      setError("Backend is offline. Please start the backend server at localhost:8000");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     setIsPlaying(false);
@@ -88,41 +85,24 @@ const App: React.FC = () => {
     setSelectedAlgorithm(null);
     setIsLearningModeActive(isLearningMode);
 
-    // Save the current backend mode for this entire session/flow
-    // This ensures we stay in the same mode throughout learning -> visualization
-    setSessionBackendMode(backendActive);
-    console.log(`🔒 [Session] Locking mode to: ${backendActive ? 'BACKEND' : 'CLOUD'}`);
-
+    // Store for later use
     setLastProblem(problem);
     setLastContext(context);
+    setLastLLMConfig(llmConfig);
+
+    // Update current provider display
+    setCurrentProvider(llmConfig.provider);
+    setCurrentModel(llmConfig.model);
 
     try {
       if (isLearningMode) {
-        if (backendActive) {
-          setAnalysisMode('backend');
-          const learningData = await learnProblemWithBackend(problem, context);
-          setLearningPhases(learningData.phases || []);
-          setShowLearningJourney(true);
-        } else {
-          setAnalysisMode('cloud');
-          const learningData = await generateLearningPhases(problem, context, selectedModel);
-          if (learningData.phases && learningData.phases.length > 0) {
-            setLearningPhases(learningData.phases);
-            setShowLearningJourney(true);
-          } else {
-            throw new Error("Learning phase generation returned empty.");
-          }
-        }
+        setAnalysisMode('backend');
+        const learningData = await learnProblemWithBackend(problem, context, llmConfig);
+        setLearningPhases(learningData.phases || []);
+        setShowLearningJourney(true);
       } else {
-        let data: TraceData;
-
-        if (backendActive) {
-          setAnalysisMode('backend');
-          data = await analyzeProblemWithBackend(problem, context);
-        } else {
-          setAnalysisMode('cloud');
-          data = await generateAlgorithmTrace(problem, context, selectedModel);
-        }
+        setAnalysisMode('backend');
+        const data = await analyzeProblemWithBackend(problem, context, llmConfig);
 
         if (data && data.frames && data.frames.length > 0) {
           setTrace(data);
@@ -139,12 +119,6 @@ const App: React.FC = () => {
       setIsLoading(false);
       setAnalysisMode('idle');
       setIsLearningModeActive(false);
-      // Note: Don't reset sessionBackendMode here for learning mode,
-      // as we need it for the subsequent visualization call
-      if (!isLearningMode) {
-        setSessionBackendMode(null);
-        console.log('🔓 [Session] Mode lock released (non-learning)');
-      }
     }
   };
 
@@ -187,10 +161,7 @@ const App: React.FC = () => {
 
   const handleLearningComplete = async () => {
     const phase3 = learningPhases.find(p => p.phase === 'explore_approaches');
-    console.log('🎓 [Learning Complete] Phase 3 data:', JSON.stringify(phase3, null, 2));
-    console.log('🎓 [Learning Complete] Recommended object:', phase3?.content?.recommended);
     const recommendedAlgo = phase3?.content?.recommended?.approach_name;
-    console.log('🎯 [Learning Complete] Extracted algorithm:', recommendedAlgo);
     setShowLearningJourney(false);
     await runVisualizationWithAlgorithm(recommendedAlgo);
   };
@@ -214,28 +185,27 @@ const App: React.FC = () => {
   };
 
   const runVisualizationWithAlgorithm = async (algorithmName: string | null) => {
-    console.log('🚀 [Visualization] Starting with algorithm:', algorithmName);
-    console.log('🚀 [Visualization] Last problem:', lastProblem?.substring(0, 100));
+    if (!backendActive) {
+      setError("Backend is offline. Please start the backend server at localhost:8000");
+      return;
+    }
 
-    // Use the session mode (locked when analysis started) instead of current backendActive state
-    // This prevents mode switching mid-flow if health check temporarily fails
-    const useBackend = sessionBackendMode !== null ? sessionBackendMode : backendActive;
-    console.log(`🔒 [Visualization] Using locked session mode: ${useBackend ? 'BACKEND' : 'CLOUD'} (sessionBackendMode=${sessionBackendMode}, backendActive=${backendActive})`);
+    if (!lastLLMConfig) {
+      setError("No LLM configuration available. Please configure your API key.");
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
 
     try {
-      let data: TraceData;
-
-      if (useBackend) {
-        setAnalysisMode('backend');
-        console.log('🔹 [Visualization] Calling backend with algorithm:', algorithmName || 'undefined');
-        data = await analyzeProblemWithBackend(lastProblem, lastContext, algorithmName || undefined);
-      } else {
-        setAnalysisMode('cloud');
-        data = await generateAlgorithmTrace(lastProblem, lastContext, selectedModel, algorithmName || undefined);
-      }
+      setAnalysisMode('backend');
+      const data = await analyzeProblemWithBackend(
+        lastProblem,
+        lastContext,
+        lastLLMConfig,
+        algorithmName || undefined
+      );
 
       if (data && data.frames && data.frames.length > 0) {
         setTrace(data);
@@ -249,10 +219,18 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
       setAnalysisMode('idle');
-      // Reset session mode after visualization completes
-      setSessionBackendMode(null);
-      console.log('🔓 [Session] Mode lock released');
     }
+  };
+
+  // Format provider name for display
+  const getProviderDisplay = () => {
+    if (!currentProvider) return '';
+    const names: Record<string, string> = {
+      'azure': 'Azure OpenAI',
+      'openai': 'OpenAI',
+      'gemini': 'Gemini'
+    };
+    return `${names[currentProvider] || currentProvider} / ${currentModel}`;
   };
 
   return (
@@ -260,8 +238,6 @@ const App: React.FC = () => {
       <Sidebar
         onAnalyze={handleAnalyze}
         isLoading={isLoading}
-        selectedModel={selectedModel}
-        onModelChange={handleModelChange}
         isBackendOnline={backendActive}
       />
 
@@ -279,19 +255,15 @@ const App: React.FC = () => {
                   BACKEND ACTIVE
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black border-2 border-cyan-500/50 bg-cyan-500/20 text-cyan-300 shadow-lg shadow-cyan-500/20">
-                  <Cloud size={12} />
-                  CLOUD MODE
+                <div className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-black border-2 border-red-500/50 bg-red-500/20 text-red-300 shadow-lg shadow-red-500/20">
+                  <Database size={12} />
+                  BACKEND OFFLINE
                 </div>
               )}
 
-              {analysisMode !== 'idle' && (
-                <div className={`flex items-center gap-1 px-3 py-1 rounded-md text-[8px] font-bold uppercase tracking-wider ${
-                  analysisMode === 'backend'
-                    ? 'bg-green-950/50 text-green-400 border border-green-500/20'
-                    : 'bg-cyan-950/50 text-cyan-400 border border-cyan-500/20'
-                }`}>
-                  {analysisMode === 'backend' ? '🧠 5-Agent Pipeline' : '⚡ Direct LLM'}
+              {analysisMode !== 'idle' && currentProvider && (
+                <div className="flex items-center gap-1 px-3 py-1 rounded-md text-[8px] font-bold uppercase tracking-wider bg-green-950/50 text-green-400 border border-green-500/20">
+                  {getProviderDisplay()}
                 </div>
               )}
             </div>
@@ -341,44 +313,25 @@ const App: React.FC = () => {
                 {isLoading ? (
                   <div className="absolute inset-0 z-50 flex flex-col items-center justify-center space-y-6 bg-slate-950/80 backdrop-blur-xl">
                     <div className="relative flex items-center justify-center">
-                      <Loader2 size={80} className={`${analysisMode === 'backend' ? 'text-green-500' : 'text-cyan-500'} animate-spin`} />
-                      {analysisMode === 'backend' ? (
-                        <Database size={32} className="absolute text-green-300 animate-pulse" />
-                      ) : (
-                        <Zap size={32} className="absolute text-cyan-300 animate-pulse" />
-                      )}
+                      <Loader2 size={80} className="text-green-500 animate-spin" />
+                      <Database size={32} className="absolute text-green-300 animate-pulse" />
                     </div>
                     <div className="text-center space-y-3">
-                      <p className={`font-mono text-lg tracking-[0.3em] animate-pulse uppercase font-black ${
-                        analysisMode === 'backend' ? 'text-green-400' : 'text-cyan-400'
-                      }`}>
+                      <p className="font-mono text-lg tracking-[0.3em] animate-pulse uppercase font-black text-green-400">
                         {isLearningModeActive
                           ? 'Generating Educational Flow'
-                          : (analysisMode === 'backend' ? 'Running 5-Agent Pipeline' : 'Synthesizing Trace')}
+                          : 'Running 5-Agent Pipeline'}
                       </p>
-                      <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-bold ${
-                        analysisMode === 'backend'
-                          ? 'bg-green-500/10 border border-green-500/30 text-green-300'
-                          : 'bg-cyan-500/10 border border-cyan-500/30 text-cyan-300'
-                      }`}>
-                        {analysisMode === 'backend' ? (
-                          <>
-                            <Database size={14} />
-                            {isLearningModeActive ? 'LEARNING MODE • 3 Phases' : 'BACKEND MODE • Python Agents • Azure OpenAI'}
-                          </>
-                        ) : (
-                          <>
-                            <Cloud size={14} />
-                            CLOUD MODE • Direct Gemini API
-                          </>
-                        )}
+                      <div className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-green-500/10 border border-green-500/30 text-green-300">
+                        <Database size={14} />
+                        {currentProvider && currentModel
+                          ? `${getProviderDisplay()}`
+                          : 'BACKEND MODE'}
                       </div>
                       <p className="text-slate-500 text-[10px] mt-2 font-mono uppercase tracking-[0.4em] opacity-80">
                         {isLearningModeActive
                           ? 'This may take 1-2 minutes...'
-                          : (analysisMode === 'backend'
-                            ? 'Executing Python Sandbox...'
-                            : `Requesting Gemini ${selectedModel.includes('pro') ? 'Pro' : 'Flash'}...`)}
+                          : 'Executing Python Sandbox...'}
                       </p>
                     </div>
                   </div>
@@ -405,7 +358,7 @@ const App: React.FC = () => {
                     <div>
                       <p className="font-bold text-slate-400 text-lg uppercase tracking-widest">Ready for Analysis</p>
                       <p className="text-[10px] text-slate-600 mt-2 uppercase tracking-[0.3em] max-w-xs leading-relaxed">
-                        Provide a problem to generate a step-by-step visual trace.
+                        Configure your LLM provider and provide a problem to generate a step-by-step visual trace.
                       </p>
                     </div>
                   </div>

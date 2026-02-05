@@ -1,0 +1,151 @@
+{
+  "algorithm_id": "binary_search",
+  "algorithm_name": "Binary Search",
+  "category": "searching",
+  "complexity": {
+    "time": {
+      "best": "O(1)",
+      "average": "O(log n)",
+      "worst": "O(log n)",
+      "explanation": "Best case when target is at middle. Each comparison eliminates half the remaining elements."
+    },
+    "space": {
+      "complexity": "O(1)",
+      "explanation": "Iterative version uses constant extra space. Recursive version uses O(log n) stack space."
+    }
+  },
+  "strategy": "Divide and Conquer Search",
+  "strategy_details": "Binary Search works on sorted arrays by repeatedly dividing the search interval in half. Compare the target with the middle element - if equal, found! If target is smaller, search left half. If larger, search right half.",
+  "templates": {
+    "small_8": {
+      "sample_input": [2, 5, 8, 12, 16, 23, 38, 56],
+      "target": 23,
+      "frames": [
+        {
+          "step_id": 0,
+          "commentary": "**Binary Search** for target `23` in sorted array `[2, 5, 8, 12, 16, 23, 38, 56]`. Array has 8 elements.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [2, 5, 8, 12, 16, 23, 38, 56],
+              "target": 23,
+              "left": 0,
+              "right": 7,
+              "mid": null
+            },
+            "highlights": []
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 1,
+          "commentary": "**Initialize pointers**: `left = 0`, `right = 7`. Calculate `mid = (0 + 7) / 2 = 3`. Compare arr[3] = 12 with target 23.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [2, 5, 8, 12, 16, 23, 38, 56],
+              "target": 23,
+              "left": 0,
+              "right": 7,
+              "mid": 3,
+              "comparison": "12 < 23"
+            },
+            "highlights": ["arr[3]"]
+          },
+          "quiz": {
+            "question": "Why must the array be sorted for Binary Search?",
+            "options": ["It's faster to sort first", "We need ordered comparison to eliminate half", "Unsorted arrays can't be searched", "It reduces space complexity"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 2,
+          "commentary": "**12 < 23**, so target is in RIGHT half. Update `left = mid + 1 = 4`. Search range is now indices 4-7: `[16, 23, 38, 56]`.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [2, 5, 8, 12, 16, 23, 38, 56],
+              "target": 23,
+              "left": 4,
+              "right": 7,
+              "mid": null,
+              "eliminated": [0, 1, 2, 3]
+            },
+            "highlights": ["arr[4]", "arr[5]", "arr[6]", "arr[7]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 3,
+          "commentary": "**Recalculate mid**: `mid = (4 + 7) / 2 = 5`. Compare arr[5] = 23 with target 23.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [2, 5, 8, 12, 16, 23, 38, 56],
+              "target": 23,
+              "left": 4,
+              "right": 7,
+              "mid": 5,
+              "comparison": "23 == 23"
+            },
+            "highlights": ["arr[5]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 4,
+          "commentary": "**FOUND!** arr[5] = 23 equals target. Return index 5. Only needed **2 comparisons** instead of scanning all 8 elements!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [2, 5, 8, 12, 16, 23, 38, 56],
+              "target": 23,
+              "found_at": 5,
+              "comparisons": 2
+            },
+            "highlights": ["arr[5]"]
+          },
+          "quiz": {
+            "question": "How many comparisons would Linear Search need in the worst case for this array?",
+            "options": ["2", "4", "8", "log(8) = 3"],
+            "correct": 2
+          }
+        },
+        {
+          "step_id": 5,
+          "commentary": "**Binary Search Analysis**: For n=8 elements, max comparisons = log₂(8) = 3. We found it in just 2! This is the power of O(log n).",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "arr": [2, 5, 8, 12, 16, 23, 38, 56],
+              "result": {
+                "found": true,
+                "index": 5,
+                "comparisons": 2,
+                "max_possible": 3
+              }
+            },
+            "highlights": ["arr[5]"]
+          },
+          "quiz": {
+            "question": "For an array of 1 million elements, what's the maximum comparisons Binary Search needs?",
+            "options": ["1000", "500000", "20", "1000000"],
+            "correct": 2
+          }
+        }
+      ]
+    }
+  },
+  "quiz_bank": [
+    {
+      "question": "What happens if we search for an element not in the array?",
+      "options": ["Infinite loop", "Returns -1 when left > right", "Throws error", "Returns 0"],
+      "correct": 1
+    },
+    {
+      "question": "Can Binary Search work on a linked list efficiently?",
+      "options": ["Yes, same O(log n)", "No, because we can't access middle in O(1)", "Yes, but needs extra space", "Only for doubly linked lists"],
+      "correct": 1
+    }
+  ]
+}

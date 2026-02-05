@@ -63,7 +63,21 @@ const Narrator: React.FC<NarratorProps> = ({
   const handleOptionClick = (idx: number) => {
     if (isResolved) return;
     setSelectedOption(idx);
-    if (frame.quiz && idx === frame.quiz.correct) {
+    // Convert correct to number to handle both string and number types from LLM
+    const correctIndex = frame.quiz ? Number(frame.quiz.correct) : -1;
+
+    // Debug logging
+    console.log('[Quiz] Click debug:', {
+      clickedIndex: idx,
+      rawCorrect: frame.quiz?.correct,
+      rawCorrectType: typeof frame.quiz?.correct,
+      parsedCorrectIndex: correctIndex,
+      isNaN: Number.isNaN(correctIndex),
+      willMatch: idx === correctIndex,
+      options: frame.quiz?.options
+    });
+
+    if (frame.quiz && idx === correctIndex) {
       setIsResolved(true);
       onQuizCorrect();
     }
@@ -180,7 +194,9 @@ const Narrator: React.FC<NarratorProps> = ({
             <div className="space-y-2">
               {frame.quiz.options.map((opt, idx) => {
                 const isSelected = selectedOption === idx;
-                const isCorrect = idx === frame.quiz?.correct;
+                // Convert correct to number to handle both string and number types from LLM
+                const correctIndex = frame.quiz ? Number(frame.quiz.correct) : -1;
+                const isCorrect = idx === correctIndex;
                 let borderClass = 'border-slate-800 hover:border-slate-700';
                 let bgClass = 'bg-slate-900/40';
                 let textClass = 'text-slate-400';

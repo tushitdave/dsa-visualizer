@@ -1,0 +1,142 @@
+{
+  "algorithm_id": "two_sum",
+  "algorithm_name": "Two Sum",
+  "category": "classic",
+  "complexity": {
+    "time": {
+      "best": "O(n)",
+      "average": "O(n)",
+      "worst": "O(n)",
+      "explanation": "Single pass through array with O(1) hash map lookups. Each element processed exactly once."
+    },
+    "space": {
+      "complexity": "O(n)",
+      "explanation": "Hash map stores up to n elements in worst case when no pair is found until the end."
+    }
+  },
+  "strategy": "Hash Map Complement Lookup",
+  "strategy_details": "For each element, calculate its complement (target - element). Check if complement exists in hash map. If yes, we found our pair! If no, store current element in map and continue. This trades space for time, achieving O(n) vs O(n²) brute force.",
+  "templates": {
+    "small_6": {
+      "sample_input": {
+        "nums": [2, 7, 11, 15, 3, 6],
+        "target": 9
+      },
+      "frames": [
+        {
+          "step_id": 0,
+          "commentary": "**Two Sum Problem**: Find two numbers in `[2, 7, 11, 15, 3, 6]` that add up to target `9`. Initialize empty hash map.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "nums": [2, 7, 11, 15, 3, 6],
+              "target": 9,
+              "hashmap": {},
+              "current_index": null
+            },
+            "highlights": []
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 1,
+          "commentary": "**Index 0**: num = 2. Complement = 9 - 2 = 7. Is 7 in map? **No**. Store {2: 0} in map.",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "nums": [2, 7, 11, 15, 3, 6],
+              "target": 9,
+              "current": 2,
+              "complement": 7,
+              "hashmap": {"2": 0},
+              "found": false
+            },
+            "highlights": ["nums[0]"]
+          },
+          "quiz": {
+            "question": "Why do we store the value as key and index as value in the hash map?",
+            "options": ["It's more efficient", "We need to find indices, not values", "Hash maps require numeric keys", "No particular reason"],
+            "correct": 1
+          }
+        },
+        {
+          "step_id": 2,
+          "commentary": "**Index 1**: num = 7. Complement = 9 - 7 = 2. Is 2 in map? **YES!** Found at index 0. Answer: [0, 1]",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "nums": [2, 7, 11, 15, 3, 6],
+              "target": 9,
+              "current": 7,
+              "complement": 2,
+              "hashmap": {"2": 0},
+              "found": true,
+              "result": [0, 1]
+            },
+            "highlights": ["nums[0]", "nums[1]"]
+          },
+          "quiz": null
+        },
+        {
+          "step_id": 3,
+          "commentary": "**Solution Found!** nums[0] + nums[1] = 2 + 7 = 9. Return indices `[0, 1]`. Only needed **2 iterations** with O(1) lookups!",
+          "state": {
+            "visual_type": "array",
+            "data": {
+              "nums": [2, 7, 11, 15, 3, 6],
+              "target": 9,
+              "solution": {
+                "indices": [0, 1],
+                "values": [2, 7],
+                "sum": 9
+              },
+              "iterations": 2
+            },
+            "highlights": ["nums[0]", "nums[1]"]
+          },
+          "quiz": {
+            "question": "What's the time complexity of the brute force approach (checking all pairs)?",
+            "options": ["O(n)", "O(n log n)", "O(n²)", "O(2^n)"],
+            "correct": 2
+          }
+        },
+        {
+          "step_id": 4,
+          "commentary": "**Why Hash Map?** Brute force checks all pairs: O(n²). Hash map gives O(1) lookup, making overall O(n). **100x faster for n=100!**",
+          "state": {
+            "visual_type": "map",
+            "data": {
+              "comparison": {
+                "brute_force": "O(n²) - Check all pairs",
+                "hash_map": "O(n) - Single pass with O(1) lookup"
+              },
+              "example": {
+                "n": 1000,
+                "brute_force_ops": 1000000,
+                "hash_map_ops": 1000
+              }
+            },
+            "highlights": []
+          },
+          "quiz": {
+            "question": "If the array was sorted, what alternative O(n) approach could we use?",
+            "options": ["Binary search", "Two pointers from both ends", "Recursion", "Dynamic programming"],
+            "correct": 1
+          }
+        }
+      ]
+    }
+  },
+  "quiz_bank": [
+    {
+      "question": "What if there are multiple valid pairs?",
+      "options": ["Return all pairs", "Return first found pair", "Depends on implementation", "Always returns empty"],
+      "correct": 2
+    },
+    {
+      "question": "Can we use the same element twice?",
+      "options": ["Yes, always", "No, indices must be different", "Only if array has duplicates", "Depends on target"],
+      "correct": 1
+    }
+  ]
+}

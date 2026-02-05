@@ -1,0 +1,389 @@
+<mxfile host="65bd71144e">
+    <diagram id="algoinsight-backend-architecture" name="AlgoInsight Backend Architecture">
+        <mxGraphModel dx="1551" dy="837" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1800" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="&lt;b&gt;AlgoInsight Backend Architecture&lt;/b&gt;&lt;br&gt;FastAPI + Multi-Agent LLM Pipeline" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="20" width="500" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="client-group" value="CLIENT LAYER" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="100" width="200" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="client-frontend" value="Frontend Application&lt;br&gt;(React/Vue/Angular)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="client-group" vertex="1">
+                    <mxGeometry y="30" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="client-user" value="User Problem Input&lt;br&gt;Context Toggles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="client-group" vertex="1">
+                    <mxGeometry y="70" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="api-gateway" value="&lt;b&gt;FastAPI Application&lt;/b&gt;&lt;br&gt;main.py | Port 8000&lt;br&gt;Uvicorn ASGI Server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="130" width="180" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="middleware-group" value="MIDDLEWARE" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="320" y="220" width="180" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="cors" value="CORS (All Origins)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" parent="middleware-group" vertex="1">
+                    <mxGeometry y="25" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="logging-mw" value="Request Logging Middleware" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" parent="middleware-group" vertex="1">
+                    <mxGeometry y="55" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="endpoints-group" value="API ENDPOINTS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="100" width="220" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="endpoint-health" value="GET / &lt;br&gt;Health Check" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#28a745;fontSize=10;" parent="endpoints-group" vertex="1">
+                    <mxGeometry y="30" width="220" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="endpoint-analyze" value="POST /analyze&lt;br&gt;Main 5-Stage Pipeline" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#004085;fontSize=10;fontStyle=1;" parent="endpoints-group" vertex="1">
+                    <mxGeometry y="65" width="220" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="endpoint-learn" value="POST /learn&lt;br&gt;3-Phase Learning Mode" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#856404;fontSize=10;fontStyle=1;" parent="endpoints-group" vertex="1">
+                    <mxGeometry y="110" width="220" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="endpoint-algo" value="POST /algorithm/generate&lt;br&gt;Algorithm Explainer" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8d7da;strokeColor=#721c24;fontSize=10;fontStyle=1;" parent="endpoints-group" vertex="1">
+                    <mxGeometry y="155" width="220" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="models-group" value="DATA MODELS (Pydantic)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="320" width="220" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="model-request" value="UserRequest {&lt;br&gt;  problem_text, context_toggles,&lt;br&gt;  recommended_algorithm?&lt;br&gt;}" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;fontFamily=Courier New;" parent="models-group" vertex="1">
+                    <mxGeometry y="25" width="220" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="model-response" value="TraceData {&lt;br&gt;  title, strategy, complexity,&lt;br&gt;  frames[], quizzes[]&lt;br&gt;}" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;fontFamily=Courier New;" parent="models-group" vertex="1">
+                    <mxGeometry y="75" width="220" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="pipeline-title" value="&lt;b&gt;5-STAGE ANALYSIS PIPELINE (/analyze)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="90" width="400" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage1" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e8f4ea;strokeColor=#2e7d32;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="130" width="250" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage1-header" value="STAGE 1: NORMALIZER&lt;br&gt;normalizer.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#a5d6a7;strokeColor=#2e7d32;fontSize=11;fontStyle=1;" parent="stage1" vertex="1">
+                    <mxGeometry width="250" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage1-content" value="• Privacy Shield (Redact PII)&lt;br&gt;• Parse Intent (LEARN/DEBUG/PRODUCTION)&lt;br&gt;• Extract Math Constraints&lt;br&gt;• Extract System Constraints&lt;br&gt;• Extract Example Inputs&lt;br&gt;• Classify DSA Topic" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="stage1" vertex="1">
+                    <mxGeometry y="35" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage1-llm" value="LLM: Gemini Flash (Cheap)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=9;" parent="stage1" vertex="1">
+                    <mxGeometry y="120" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage2" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="130" width="250" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage2-header" value="STAGE 2: STRATEGIST&lt;br&gt;strategist.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90caf9;strokeColor=#1565c0;fontSize=11;fontStyle=1;" parent="stage2" vertex="1">
+                    <mxGeometry width="250" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage2-content" value="• Analyze Normalized Problem&lt;br&gt;• Query Heuristics Database&lt;br&gt;• Evaluate Algorithm Options&lt;br&gt;• Calculate Time/Space Complexity&lt;br&gt;• Select Best Strategy&lt;br&gt;• Support Learning Mode Override" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="stage2" vertex="1">
+                    <mxGeometry y="35" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage2-llm" value="LLM: Gemini Pro (Powerful)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="stage2" vertex="1">
+                    <mxGeometry y="120" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage3" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff3e0;strokeColor=#ef6c00;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1410" y="130" width="250" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage3-header" value="STAGE 3: INSTRUMENTER&lt;br&gt;instrumenter.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffcc80;strokeColor=#ef6c00;fontSize=11;fontStyle=1;" parent="stage3" vertex="1">
+                    <mxGeometry width="250" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage3-content" value="• Generate Python Code&lt;br&gt;• Create Solution Class&lt;br&gt;• Add self.trace Instrumentation&lt;br&gt;• Generate run_demo() Method&lt;br&gt;• Create 10-15 Log Points&lt;br&gt;• Include Example Inputs" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="stage3" vertex="1">
+                    <mxGeometry y="35" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage3-llm" value="LLM: Gemini Pro (Powerful)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#ef6c00;fontSize=9;" parent="stage3" vertex="1">
+                    <mxGeometry y="120" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage4" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fce4ec;strokeColor=#c2185b;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1690" y="130" width="250" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage4-header" value="STAGE 4: TRACER&lt;br&gt;tracer.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f48fb1;strokeColor=#c2185b;fontSize=11;fontStyle=1;" parent="stage4" vertex="1">
+                    <mxGeometry width="250" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage4-content" value="• ExecutionSandbox Class&lt;br&gt;• Execute Code in Isolated Scope&lt;br&gt;• Catch Exceptions&lt;br&gt;• Extract Trace Data&lt;br&gt;• Validate Solution Class Exists&lt;br&gt;• Return Execution Status" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="stage4" vertex="1">
+                    <mxGeometry y="35" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage4-llm" value="NO LLM - Pure Python Execution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8bbd9;strokeColor=#c2185b;fontSize=9;fontStyle=2;" parent="stage4" vertex="1">
+                    <mxGeometry y="120" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage5" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ede7f6;strokeColor=#512da8;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1970" y="130" width="250" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage5-header" value="STAGE 5: NARRATOR&lt;br&gt;narrator.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b39ddb;strokeColor=#512da8;fontSize=11;fontStyle=1;" parent="stage5" vertex="1">
+                    <mxGeometry width="250" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage5-content" value="• Transform Trace to Narrative&lt;br&gt;• Synthesize Variable Containers&lt;br&gt;• Consolidate to 10-15 Frames&lt;br&gt;• Generate Interactive Quizzes&lt;br&gt;• Create Nested Data Structures&lt;br&gt;• Analyze Time/Space Complexity" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="stage5" vertex="1">
+                    <mxGeometry y="35" width="250" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="stage5-llm" value="LLM: Gemini Pro (Powerful)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1c4e9;strokeColor=#512da8;fontSize=9;" parent="stage5" vertex="1">
+                    <mxGeometry y="120" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow1-2" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#2e7d32;" parent="1" source="stage1" target="stage2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1100" y="205" as="sourcePoint"/>
+                        <mxPoint x="1130" y="205" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow2-3" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#1565c0;" parent="1" source="stage2" target="stage3" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1380" y="205" as="sourcePoint"/>
+                        <mxPoint x="1410" y="205" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow3-4" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#ef6c00;" parent="1" source="stage3" target="stage4" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1660" y="205" as="sourcePoint"/>
+                        <mxPoint x="1690" y="205" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow4-5" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#c2185b;" parent="1" source="stage4" target="stage5" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1940" y="205" as="sourcePoint"/>
+                        <mxPoint x="1970" y="205" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="label1-2" value="normalized_data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1080" y="180" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="label2-3" value="blueprint" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1370" y="180" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="label3-4" value="spy_code_data" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1645" y="180" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="label4-5" value="trace_results" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1930" y="180" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="learn-title" value="&lt;b&gt;3-PHASE LEARNING MODE (/learn)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="310" width="350" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="learn1" value="Phase 1: UNDERSTAND&lt;br&gt;&lt;br&gt;• Problem Breakdown&lt;br&gt;• Extract Objectives&lt;br&gt;• Key Insights" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontSize=10;align=left;verticalAlign=top;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="850" y="350" width="180" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="learn2" value="Phase 2: ANALYZE INPUT&lt;br&gt;&lt;br&gt;• Identify Data Structures&lt;br&gt;• Extract Sample Values&lt;br&gt;• Explain Properties" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe0b2;strokeColor=#f57c00;fontSize=10;align=left;verticalAlign=top;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="350" width="180" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="learn3" value="Phase 3: EXPLORE&lt;br&gt;&lt;br&gt;• Suggest 2-3 Algorithms&lt;br&gt;• Compare Complexities&lt;br&gt;• Recommend Best" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffccbc;strokeColor=#e64a19;fontSize=10;align=left;verticalAlign=top;spacingLeft=10;" parent="1" vertex="1">
+                    <mxGeometry x="1270" y="350" width="180" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="learn-module" value="educational_flow_generator.py&lt;br&gt;LLM: Gemini Pro" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffecb3;strokeColor=#ff8f00;fontSize=9;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="455" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="learn-arrow1" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#f9a825;" parent="1" source="learn1" target="learn2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1030" y="395" as="sourcePoint"/>
+                        <mxPoint x="1060" y="395" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="learn-arrow2" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#f57c00;" parent="1" source="learn2" target="learn3" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1240" y="395" as="sourcePoint"/>
+                        <mxPoint x="1270" y="395" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="learn-to-analyze" value="User selects&lt;br&gt;algorithm" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;curved=1;" parent="1" source="learn3" target="stage1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1450" y="400" as="sourcePoint"/>
+                        <mxPoint x="850" y="280" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1500" y="400"/>
+                            <mxPoint x="1500" y="300"/>
+                            <mxPoint x="800" y="300"/>
+                            <mxPoint x="800" y="200"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="algo-title" value="&lt;b&gt;ALGORITHM EXPLAINER (/algorithm/generate)&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="1550" y="310" width="400" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="algo-explainer" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1550" y="350" width="280" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="algo-header" value="algorithm_explainer.py&lt;br&gt;LLM: Gemini Pro" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ce93d8;strokeColor=#7b1fa2;fontSize=11;fontStyle=1;" parent="algo-explainer" vertex="1">
+                    <mxGeometry width="280" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="algo-content" value="• Comprehensive Algorithm Explanation&lt;br&gt;• Visual Step Walkthroughs&lt;br&gt;• Pseudocode with Annotations&lt;br&gt;• Complexity Analysis &amp; Comparison&lt;br&gt;• Common Pitfalls with Code Examples&lt;br&gt;• Practice Exercises &amp; Quizzes" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="algo-explainer" vertex="1">
+                    <mxGeometry y="35" width="280" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="algo-cache" value="Cache: public/algorithms/{id}.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1bee7;strokeColor=#7b1fa2;fontSize=9;fontStyle=2;" parent="algo-explainer" vertex="1">
+                    <mxGeometry y="125" width="280" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="algo-output" value="Output: Algorithm Data (JSON Schema)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontSize=9;" parent="algo-explainer" vertex="1">
+                    <mxGeometry y="150" width="280" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="utils-title" value="&lt;b&gt;UTILITY MODULES&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="310" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="llm-provider" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e1f5fe;strokeColor=#0288d1;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="350" width="230" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="llm-header" value="LLM Provider (llm_provider.py)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4fc3f7;strokeColor=#0288d1;fontSize=10;fontStyle=1;" parent="llm-provider" vertex="1">
+                    <mxGeometry width="230" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="llm-content" value="• Multi-Provider Abstraction&lt;br&gt;• Model Tier Selection&lt;br&gt;  - flash (faster, cheaper)&lt;br&gt;  - pro (powerful)&lt;br&gt;• JSON Mode Configuration&lt;br&gt;• Mock Response Fallback" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="llm-provider" vertex="1">
+                    <mxGeometry y="25" width="230" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="llm-methods" value="Methods:&lt;br&gt;• call(prompt, system, json_mode)&lt;br&gt;• _call_azure() - Azure OpenAI&lt;br&gt;• _call_gemini() - Google Gemini&lt;br&gt;• _generate_mock_response()" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=8;fontFamily=Courier New;" parent="llm-provider" vertex="1">
+                    <mxGeometry y="105" width="230" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="logger" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e8f5e9;strokeColor=#43a047;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="350" width="200" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="logger-header" value="Logger (logger.py)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#43a047;fontSize=10;fontStyle=1;" parent="logger" vertex="1">
+                    <mxGeometry width="200" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="logger-content" value="• ColoredFormatter Class&lt;br&gt;• Per-Component Loggers&lt;br&gt;• Rotating File Handler&lt;br&gt;  (10MB, 5 backups)&lt;br&gt;• Color-Coded Console Output&lt;br&gt;• Performance Decorator" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="logger" vertex="1">
+                    <mxGeometry y="25" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="logger-path" value="Path: backend/logs/*.log" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#43a047;fontSize=8;fontStyle=2;" parent="logger" vertex="1">
+                    <mxGeometry y="105" width="200" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="heuristics" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fce4ec;strokeColor=#e91e63;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="550" width="230" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="heuristics-header" value="Heuristics DB (heuristics.py)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f48fb1;strokeColor=#e91e63;fontSize=10;fontStyle=1;" parent="heuristics" vertex="1">
+                    <mxGeometry width="230" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="heuristics-content" value="Rule-Based Constraints Mapping:&lt;br&gt;&lt;br&gt;• low_latency → O(1)/O(log n)&lt;br&gt;• embedded → Memory limits, no recursion&lt;br&gt;• high_throughput → Minimize locking&lt;br&gt;• real_time → Deterministic execution&lt;br&gt;• large_dataset → Streaming algorithms&lt;br&gt;• threading → Immutable structures" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="heuristics" vertex="1">
+                    <mxGeometry y="25" width="230" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="heuristics-func" value="consult_heuristics_db(constraints)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8bbd9;strokeColor=#e91e63;fontSize=8;fontStyle=2;" parent="heuristics" vertex="1">
+                    <mxGeometry y="135" width="230" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="external-title" value="&lt;b&gt;EXTERNAL SERVICE INTEGRATIONS&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="500" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="gemini" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff8e1;strokeColor=#ffb300;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="540" width="200" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="gemini-header" value="Google Gemini API (PRIMARY)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffd54f;strokeColor=#ffb300;fontSize=10;fontStyle=1;" parent="gemini" vertex="1">
+                    <mxGeometry width="200" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="gemini-content" value="Models:&lt;br&gt;• gemini-2.5-flash (Fast/Cheap)&lt;br&gt;• gemini-2.5-pro (Powerful)&lt;br&gt;&lt;br&gt;Library: google-genai&lt;br&gt;Config: API_KEY in .env" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="gemini" vertex="1">
+                    <mxGeometry y="25" width="200" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="azure" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e3f2fd;strokeColor=#1976d2;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="540" width="200" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="azure-header" value="Azure OpenAI (FALLBACK)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#64b5f6;strokeColor=#1976d2;fontSize=10;fontStyle=1;" parent="azure" vertex="1">
+                    <mxGeometry width="200" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="azure-content" value="Model: gpt-4o&lt;br&gt;&lt;br&gt;Library: openai (Azure client)&lt;br&gt;&lt;br&gt;Config:&lt;br&gt;• AZURE_OPENAI_API_KEY&lt;br&gt;• AZURE_OPENAI_ENDPOINT&lt;br&gt;• AZURE_DEPLOYMENT_NAME" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="azure" vertex="1">
+                    <mxGeometry y="25" width="200" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="storage-title" value="&lt;b&gt;DATA STORAGE &amp; PERSISTENCE&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="500" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="cache" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="750" y="540" width="120" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cache-label" value="Algorithm Cache&lt;br&gt;&lt;br&gt;public/algorithms/&lt;br&gt;{algorithm_id}.json" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="755" y="555" width="110" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="890" y="540" width="120" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="logs-label" value="Log Files&lt;br&gt;&lt;br&gt;backend/logs/&lt;br&gt;algoinsight_*.log&lt;br&gt;(Rotating)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="895" y="555" width="110" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="env" value="" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f5f5f5;strokeColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="1030" y="540" width="120" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="env-label" value="Environment&lt;br&gt;&lt;br&gt;backend/.env&lt;br&gt;API Keys &amp; Config" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="1035" y="555" width="110" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="error-title" value="&lt;b&gt;ERROR HANDLING &amp; FALLBACKS&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="500" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="error-handling" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#ffebee;strokeColor=#c62828;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="540" width="280" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="error-header" value="Fallback Mechanisms" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ef9a9a;strokeColor=#c62828;fontSize=10;fontStyle=1;" parent="error-handling" vertex="1">
+                    <mxGeometry width="280" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="error-content" value="STATIC_FALLBACK (Demo Response):&lt;br&gt;• Title: Median of Stream (Static Fallback)&lt;br&gt;• Strategy: Two-Heap Strategy&lt;br&gt;• Complexity: O(log n) / O(n)&lt;br&gt;• Frames: 2 demo frames&lt;br&gt;&lt;br&gt;Error Points &amp; Handling:&lt;br&gt;• Stage fails → Catch, log, raise&lt;br&gt;• Tracer fails → Return STATIC_FALLBACK&lt;br&gt;• All LLMs fail → Mock response" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="error-handling" vertex="1">
+                    <mxGeometry y="25" width="280" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="client-to-api" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6c8ebf;" parent="1" source="client-group" target="api-gateway" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="240" y="160" as="sourcePoint"/>
+                        <mxPoint x="320" y="160" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="client-to-api-label" value="HTTP" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="145" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="api-to-endpoints" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#82b366;" parent="1" source="api-gateway" target="endpoints-group" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="500" y="165" as="sourcePoint"/>
+                        <mxPoint x="560" y="165" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="endpoints-to-pipeline" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#1565c0;dashed=1;" parent="1" source="endpoint-analyze" target="stage1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="780" y="165" as="sourcePoint"/>
+                        <mxPoint x="850" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="llm-to-stages" value="" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=1;strokeColor=#0288d1;dashed=1;" parent="1" source="llm-provider" target="stage1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="270" y="440" as="sourcePoint"/>
+                        <mxPoint x="850" y="200" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="500" y="440"/>
+                            <mxPoint x="500" y="200"/>
+                            <mxPoint x="800" y="200"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="heuristics-to-strategist" value="" style="endArrow=classic;html=1;strokeWidth=1;strokeColor=#e91e63;dashed=1;" parent="1" source="heuristics" target="stage2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="270" y="630" as="sourcePoint"/>
+                        <mxPoint x="1255" y="280" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="600" y="630"/>
+                            <mxPoint x="600" y="290"/>
+                            <mxPoint x="1255" y="290"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="output" value="TraceData&lt;br&gt;Response&lt;br&gt;(JSON)" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="2050" y="320" width="100" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="narrator-to-output" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#512da8;" parent="1" source="stage5" target="output" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="2220" y="205" as="sourcePoint"/>
+                        <mxPoint x="2100" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="output-label" value="final_trace" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;fontStyle=2;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry x="2080" y="290" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="lifecycle-title" value="&lt;b&gt;SERVER LIFECYCLE&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#1a1a2e;" parent="1" vertex="1">
+                    <mxGeometry x="1550" y="550" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="lifecycle" value="" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#e8eaf6;strokeColor=#3f51b5;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1550" y="585" width="250" height="125" as="geometry"/>
+                </mxCell>
+                <mxCell id="lifecycle-header" value="Startup &amp; Shutdown Events" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9fa8da;strokeColor=#3f51b5;fontSize=10;fontStyle=1;" parent="lifecycle" vertex="1">
+                    <mxGeometry width="250" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="lifecycle-content" value="Startup:&lt;br&gt;• Load .env variables&lt;br&gt;• Initialize logger with colors&lt;br&gt;• Print startup banner&lt;br&gt;• Log server URL &amp; docs location&lt;br&gt;• Check API key status&lt;br&gt;&lt;br&gt;Shutdown:&lt;br&gt;• Log shutdown message" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="lifecycle" vertex="1">
+                    <mxGeometry y="25" width="250" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="server-config" value="Server Config&lt;br&gt;Host: 0.0.0.0 | Port: 8000&lt;br&gt;Docs: /docs (Swagger)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5cae9;strokeColor=#3f51b5;fontSize=9;" parent="1" vertex="1">
+                    <mxGeometry x="1830" y="600" width="150" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend" value="&lt;b&gt;LEGEND&lt;/b&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="2000" y="420" width="200" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-content" value="&lt;div style=&quot;text-align: left;&quot;&gt;Colors:&lt;br&gt;🟢 Stage 1: Normalizer&lt;br&gt;🔵 Stage 2: Strategist&lt;br&gt;🟠 Stage 3: Instrumenter&lt;br&gt;🔴 Stage 4: Tracer&lt;br&gt;🟣 Stage 5: Narrator&lt;br&gt;&lt;br&gt;Lines:&lt;br&gt;━━━ Primary data flow&lt;br&gt;- - - Secondary/optional&lt;br&gt;&lt;br&gt;Shapes:&lt;br&gt;▭ Processing module&lt;br&gt;▱ Data model&lt;br&gt;◯ Storage/Database&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=9;" parent="legend" vertex="1">
+                    <mxGeometry y="25" width="200" height="215" as="geometry"/>
+                </mxCell>
+                <mxCell id="files-ref" value="&lt;b&gt;FILE LOCATIONS&lt;/b&gt;" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=25;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fafafa;strokeColor=#9e9e9e;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1850" y="130" width="350" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="files-content" value="backend/app/&lt;br&gt;├── main.py              &amp;lt;-- FastAPI Entry Point&lt;br&gt;├── agents/&lt;br&gt;│   ├── normalizer.py    &amp;lt;-- Stage 1&lt;br&gt;│   ├── strategist.py    &amp;lt;-- Stage 2&lt;br&gt;│   ├── instrumenter.py  &amp;lt;-- Stage 3&lt;br&gt;│   ├── tracer.py        &amp;lt;-- Stage 4&lt;br&gt;│   ├── narrator.py      &amp;lt;-- Stage 5&lt;br&gt;│   ├── educational_flow_generator.py&lt;br&gt;│   └── algorithm_explainer.py&lt;br&gt;└── utils/&lt;br&gt;    ├── llm_provider.py, logger.py, heuristics.py" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=8;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="1880" y="5" width="350" height="125" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

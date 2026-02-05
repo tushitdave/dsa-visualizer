@@ -5,6 +5,115 @@ from app.utils.logger import get_logger, log_error_with_context
 
 logger = get_logger("instrumenter")
 
+
+async def run_instrumenter_with_provider(llm_provider, blueprint: dict, normalized_data: dict) -> dict:
+    """
+    Generate instrumented Python code using provided LLM provider.
+
+    Args:
+        llm_provider: LLM provider instance (from Pipeline)
+        blueprint: Output from strategist agent
+        normalized_data: Output from normalizer (includes example inputs)
+
+    Returns:
+        Dictionary with generated code and entry point
+    """
+    strategy = blueprint.get('selected_strategy_for_instrumentation', 'Unknown')
+    example_inputs = normalized_data.get('example_inputs', [])
+
+    logger.info(f"Generating instrumented code for: {strategy}")
+    if example_inputs:
+        logger.info(f"Using example inputs: {example_inputs[0].get('input_vars', {})}")
+
+    # Build example inputs section
+    example_section = ""
+    if example_inputs and len(example_inputs) > 0:
+        first_example = example_inputs[0]
+        input_vars = first_example.get('input_vars', {})
+        expected_output = first_example.get('expected_output', 'Unknown')
+
+        example_section = f"""
+    CRITICAL: USE THESE EXACT INPUT VALUES IN run_demo()
+    Input Variables: {json.dumps(input_vars)}
+    Expected Output: {expected_output}
+
+    Your run_demo() function MUST use these exact values, NOT made-up examples!
+    """
+    else:
+        example_section = """
+    No specific example inputs provided. Create reasonable test data for the algorithm.
+    """
+
+    system_instruction = """You are a Lead Python Developer specializing in algorithm instrumentation for educational visualizations.
+    Create code that logs MEANINGFUL ALGORITHMIC STEPS, not individual variable updates."""
+
+    prompt = f"""
+    Implement this algorithm: {strategy}
+
+    {example_section}
+
+    INSTRUMENTATION REQUIREMENTS:
+
+    1. **CLASS STRUCTURE**:
+       - Define class `Solution`
+       - Initialize `self.trace = []` in `__init__`
+       - Implement `self.log(step_name, variables, highlights)` method
+       - CRITICAL: Implement `run_demo(self)` method with NO parameters
+
+    2. **THE run_demo() METHOD** (MANDATORY):
+       This method must:
+       - Take NO parameters (def run_demo(self):)
+       - Extract test parameters from the problem description
+       - Create appropriate test data structures
+       - Call the main algorithm method
+       - Return the result
+
+    3. **LOGGING STRATEGY** (CRITICAL):
+       - Group related operations into logical steps (aim for ~10-15 steps)
+       - Each log should represent a significant algorithm step
+       - Always include input data in first log
+       - Group related variables together
+
+    4. **LOG FORMAT**:
+       self.log(
+           'Step description',
+           {{'input_array': [...], 'pointers': {{...}}, 'result': {{...}}}},
+           ['input_array[i]', 'pointers']
+       )
+
+    GENERATE CODE:
+    - MUST include run_demo() method with NO parameters
+    - Aim for 10-15 log calls total
+    - Use meaningful step descriptions
+
+    Return JSON:
+    {{
+        "code": "Full Python code as string (MUST include run_demo() method)",
+        "entry_point": "run_demo",
+        "complexity_analysis": "Time and space complexity explanation"
+    }}
+    """
+
+    try:
+        logger.debug("Calling LLM for code generation...")
+        response_text = await llm_provider.call(prompt, system_instruction=system_instruction, json_mode=True)
+
+        code_data = json.loads(response_text)
+
+        entry_point = code_data.get('entry_point', 'Unknown')
+        code_length = len(code_data.get('code', ''))
+
+        logger.info(f"Code generated: {code_length} characters")
+        logger.info(f"Entry point: {entry_point}")
+        logger.debug(f"Code preview:\n{code_data.get('code', '')[:300]}...")
+
+        return code_data
+
+    except Exception as e:
+        log_error_with_context(logger, e, {"strategy": strategy})
+        raise
+
+
 async def run_instrumenter(blueprint: dict, normalized_data: dict) -> dict:
     """
     Generate instrumented Python code for the selected algorithm

@@ -29,8 +29,33 @@ export interface TraceData {
   strategy_details?: string;
   complexity: Complexity;
   frames: Frame[];
+  _meta?: {
+    request_id?: string;
+    provider_used?: string;
+    model_used?: string;
+    fallback?: boolean;
+  };
 }
 
 export type ContextOption = 'Embedded System' | 'High Throughput' | 'Low Memory';
 
-export type ModelName = 'gemini-2.5-flash' | 'gemini-2.5-pro' | 'gemini-2.5-flash-lite-latest';
+// LLM Provider types
+export type LLMProvider = 'azure' | 'openai' | 'gemini';
+
+export interface LLMConfig {
+  provider: LLMProvider;
+  model: string;
+  apiKey: string;
+  azureEndpoint?: string;
+}
+
+export interface ProviderInfo {
+  name: string;
+  models: string[];
+  requires_endpoint: boolean;
+  description: string;
+}
+
+export interface ProvidersResponse {
+  providers: Record<LLMProvider, ProviderInfo>;
+}
