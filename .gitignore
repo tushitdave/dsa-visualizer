@@ -26,6 +26,11 @@ dist-ssr
 # Development files
 _dev_docs/
 CLAUDE.md
+claude_imp.md
+new_file_addon.md
+*.drawio
+*.bat
+*.mp4
 
 # Python
 backend/.venv/
